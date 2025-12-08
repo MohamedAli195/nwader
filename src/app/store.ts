@@ -29,6 +29,7 @@ import { notificationsApi } from "./features/notifications/notifications";
 import { EducationalInformationApi } from "./features/EducationsalInfo/educationalInfo";
 import { SchoolsApi } from "./features/schools/schoolsApi";
 import { TuitionDiscountsApi } from "./features/TuitionDiscounts/TuitionDiscountsApi";
+import productsApi from "./features/products/productsSlice";
 
 const persistConfig = {
   key: "auth",
@@ -44,6 +45,7 @@ export const store = configureStore({
     language: languageReducer,
     auth: persistedAuthReducer, // use persisted version
     [authApi.reducerPath]: authApi.reducer,
+    [productsApi.reducerPath]: productsApi.reducer,
     [EduSystemsApi.reducerPath]: EduSystemsApi.reducer,
     [AcademicStagesApi.reducerPath]: AcademicStagesApi.reducer,
     [AcademicYearsApi.reducerPath]: AcademicYearsApi.reducer,
@@ -67,6 +69,7 @@ export const store = configureStore({
       },
     }).concat(
       authApi.middleware,
+      productsApi.middleware,
       EduSystemsApi.middleware,
       AcademicStagesApi.middleware,
       AcademicYearsApi.middleware,
