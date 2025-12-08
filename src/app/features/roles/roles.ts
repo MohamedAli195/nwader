@@ -80,8 +80,8 @@ export const roleApi = createApi({
       { id: number | undefined; formData: FormData }
     >({
       query: ({ id, formData }) => ({
-        url: `/roles/${id}/update`,
-        method: "POST",
+        url: `/roles/${id}`,
+        method: "PUT",
         body: formData,
       }),
       invalidatesTags: ["roles"],
@@ -90,7 +90,7 @@ export const roleApi = createApi({
     // 👇 delete
     deleteRole: builder.mutation<IRoleResponse, number | undefined>({
       query: (id) => ({
-        url: `/roles/${id}/destroy`,
+        url: `/roles/${id}`,
         method: "DELETE",
       }),
       invalidatesTags: ["roles"],
