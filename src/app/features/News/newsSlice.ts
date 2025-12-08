@@ -4,14 +4,14 @@ import Base_URL from "../../url";
 
 export interface IFormInputNews {
   title: string;
-  description: string;
+  content: string;
   image: FileList;
 }
 
 export interface INews {
   id?: number | undefined;
   title: string;
-  description: string;
+  content: string;
   image: string;
   image_url?: string;
 }
@@ -111,7 +111,7 @@ export const newsApi = createApi({
     updateNew: builder.mutation<IresPost, { id: number; body: FormData }>({
       query: ({ id, body }) => ({
         url: `/news/${id}`,
-        method: "POST",
+        method: "PUT",
         body,
       }),
       invalidatesTags: ["News"],

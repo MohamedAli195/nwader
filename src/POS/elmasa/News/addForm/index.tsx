@@ -6,7 +6,7 @@ import Button from "../../../../components/ui/button/Button";
 import { useCreateNewMutation } from "../../../../app/features/News/newsSlice";
 export interface IFormInputNews {
   title: string;
-  description: string;
+  content: string;
   image: FileList;
 }
 export default function AddNew({ onClose }: { onClose: () => void }) {
@@ -21,7 +21,7 @@ export default function AddNew({ onClose }: { onClose: () => void }) {
     // Prepare FormData to send as a POST request
     const formData = new FormData();
     formData.append("title", data.title);
-    formData.append("description", data.description || "");
+    formData.append("content", data.content || "");
     // if (data.password) formData.append("password", data.password);
     if (data.image && data.image[0]) {
       formData.append("image", data.image[0]);
@@ -62,7 +62,7 @@ export default function AddNew({ onClose }: { onClose: () => void }) {
 
       <div>
         <label> الوصف</label>
-        <Input type="text" {...register("description")} />
+        <Input type="text" {...register("content")} />
       </div>
 
       <div>

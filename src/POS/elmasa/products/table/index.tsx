@@ -46,7 +46,7 @@ export default function ProductsTable() {
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) =>
     SetSearch(e.target.value);
 
-  const handleDelete = async (id: number ) => {
+  const handleDelete = async (id: number) => {
     const result = await Swal.fire({
       title: "هل أنت متأكد؟",
       text: "لن تتمكن من التراجع عن هذا!",
@@ -120,59 +120,70 @@ export default function ProductsTable() {
               </TableRow>
             </TableHeader>
 
-            <TableBody className="divide-y divide-gray-100">
-              {Products.map((product) => (
-                <TableRow key={product.id} className="hover:bg-gray-50">
-                  <TableCell className="px-5 py-4 text-gray-800 font-medium">
-                    {product.name}
-                  </TableCell>
+        <TableBody className="divide-y divide-gray-100">
+  {Products.map((product) => (
+    <TableRow key={product.id} className="hover:bg-gray-50">
 
-                  <TableCell className="px-5 py-4 text-gray-600">
-                    {product.description}
-                  </TableCell>
+      <TableCell className="px-5 py-4 text-gray-800 font-medium text-center">
+        {product.name}
+      </TableCell>
 
-                  <TableCell className="px-5 py-4 text-gray-600">
-                    {product.price} ر.س
-                  </TableCell>
+      <TableCell className="px-5 py-4 text-gray-600 text-center">
+        {product.description}
+      </TableCell>
 
-                  <TableCell className="px-5 py-4 text-blue-600 underline">
-                    <Link to={product.store_link} target="_blank" />
-                  </TableCell>
+      <TableCell className="px-5 py-4 text-gray-600 text-center">
+        {product.price} ر.س
+      </TableCell>
 
-                  <TableCell className="px-5 py-4">
-                    <img
-                      src={
-                        product.images?.[0] ||
-                        `https://ui-avatars.com/api/?name=${product.name}&background=8b5cf6&color=fff`
-                      }
-                      alt={product.name}
-                      className="h-16 w-16 object-cover rounded-lg border"
-                    />
-                  </TableCell>
+      <TableCell className="px-5 py-4 text-blue-600 underline text-center">
+        <Link
+          to={product.store_link}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-blue-600 underline"
+        >
+          رابط المنتج
+        </Link>
+      </TableCell>
 
-                  <TableCell className="px-5 py-4 text-center">
-                    <div className="flex flex-col sm:flex-row justify-center gap-2">
-                      <Button
-                        className="bg-purple-600 text-white"
-                        onClick={() => {
-                          SetTempProduct(product);
-                          onOpenUp();
-                        }}
-                      >
-                        تعديل
-                      </Button>
+      <TableCell className="px-5 py-4 text-center">
+        <img
+          src={
+            product.images?.length
+              ? product.images[0]
+              : `https://ui-avatars.com/api/?name=${product.name}&background=8b5cf6&color=fff`
+          }
+          alt={product.name}
+          className="h-16 w-16 object-cover rounded-lg border mx-auto"
+        />
+      </TableCell>
 
-                      <Button
-                        className="bg-red-600 text-white"
-                        onClick={() => handleDelete(product.id)}
-                      >
-                        حذف
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
+      <TableCell className="px-5 py-4 text-center">
+        <div className="flex flex-col sm:flex-row justify-center gap-2">
+          <Button
+            className="bg-purple-600 text-white"
+            onClick={() => {
+              SetTempProduct(product);
+              onOpenUp();
+            }}
+          >
+            تعديل
+          </Button>
+
+          <Button
+            className="bg-red-600 text-white"
+            onClick={() => handleDelete(product.id)}
+          >
+            حذف
+          </Button>
+        </div>
+      </TableCell>
+
+    </TableRow>
+  ))}
+</TableBody>
+
           </Table>
 
           <div className="mt-4">

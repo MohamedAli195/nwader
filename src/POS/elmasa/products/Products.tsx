@@ -16,14 +16,14 @@ const Products = () => {
       SetIsOpen(true);
     };
   return (
-    <ComponentCard onOpen={onOpen} title="News">
+    <ComponentCard onOpen={onOpen} title="Products">
       <ProductsTable />
       <Modal
         className="w-full  lg:w-4/12 xl:w-4/12  h-auto relative  rounded-3xl bg-white  dark:bg-gray-900"
         isOpen={isOpen}
         onClose={onClose}
       >
-        <h1 className="flex justify-center p-3  text-3xl">اضافة خبر</h1>
+        <h1 className="flex justify-center p-3  text-3xl">اضافة منتج</h1>
         <AddProduct onClose={onClose}/>
       </Modal>
     </ComponentCard>
