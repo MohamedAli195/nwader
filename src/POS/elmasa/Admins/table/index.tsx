@@ -1,30 +1,23 @@
 import { ChangeEvent, useRef, useState } from "react";
-import * as XLSX from "xlsx";
-import { saveAs } from "file-saver";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHeader,
-  TableRow,
-} from "../../../components/ui/table";
-import Button from "../../../components/ui/button/Button";
-import { Modal } from "../../../components/ui/modal";
-import Paginator from "../../../components/ui/Pagination/Paginator";
+
+
+
 import Swal from "sweetalert2";
-import {
-  IAdmins,
-  useDeleteAdminMutation,
-  useGetAdminsQuery,
-} from "../../../app/features/Admins/AdminsSlice";
+
 import UpdateAdminForm from "../updateForm";
 import { useTranslation } from "react-i18next";
+import { IAdmins, useDeleteAdminMutation, useGetAdminsQuery } from "../../../../app/features/Admins/AdminsSlice";
+import Button from "../../../../components/ui/button/Button";
+import { Table, TableBody, TableCell, TableHeader, TableRow } from "../../../../components/ui/table";
+import Paginator from "../../../../components/ui/Pagination/Paginator";
+import { Modal } from "../../../../components/ui/modal";
 
 export default function AdminsTable() {
   const { t } = useTranslation();
   const [page, SetPage] = useState(1);
+  const per_page = 15;
   const [search, SetSearch] = useState("");
-  const { data, error, isLoading } = useGetAdminsQuery({ page, search });
+  const { data, error, isLoading } = useGetAdminsQuery({ per_page, search });
   
   const [tempAdmin, SetTempAdmin] = useState<IAdmins | undefined>();
   console.log(tempAdmin)
@@ -45,8 +38,8 @@ const [isOpenUp, SetIsOpenUp] = useState(false);
     SetIsOpenView(true);
   };
 
-  const admins = data?.data?.data ?? [];
-  const total = data?.data?.total ?? 0;
+  const admins = data?.data ?? [];
+  const total = data?.meta?.total ?? 0;
 console.log(admins)
   const [deleteAdmin] = useDeleteAdminMutation();
 
@@ -88,79 +81,9 @@ console.log(admins)
     SetSearch(e.target.value);
   };
 
-  const exportToExcel = () => {
-    const exportData = admins.map((admin) => ({
-      [t("name") || "الاسم"]: admin.name,
-      [t("email") || "البريد الإلكتروني"]: admin.email,
-      [t("permissions") || "الصلاحيات"]:
-        admin.permissions?.map((p) => p.display_name).join(", ") || "-",
-      [t("store") || "المخزن"]: admin.store?.name || "-",
-      [t("phone") || "الموبايل"]: admin.phone || "-",
-      
-    }));
 
-    const ws = XLSX.utils.json_to_sheet(exportData);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, t("admins") || "Admins");
-    const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
-    const blob = new Blob([excelBuffer], { type: "application/octet-stream" });
-    saveAs(blob, "admins.xlsx");
-  };
 
-  const handlePrint = () => {
-    const printWindow = window.open("", "_blank");
-    if (!printWindow) return;
 
-    const html = `
-      <html dir="rtl" lang="ar">
-        <head>
-          <title>${t("adminsList") || "قائمة المستخدمين"}</title>
-          <style>
-            body { font-family: sans-serif; direction: rtl; text-align: center; }
-            table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-            th, td { border: 1px solid #000; padding: 8px; font-size: 14px; }
-            th { background-color: #f0f0f0; }
-          </style>
-        </head>
-        <body>
-          <h2>${t("adminsList") || "قائمة المستخدمين"}</h2>
-          <table>
-            <thead>
-              <tr>
-                <th>${t("name") || "الاسم"}</th>
-                <th>${t("email") || "البريد الإلكتروني"}</th>
-                <th>${t("permissions") || "الصلاحيات"}</th>
-                <th>${t("store") || "المخزن"}</th>
-                <th>${t("phone") || "الموبايل"}</th>
-                <th>${t("employeeType") || "نوع الموظف"}</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${admins
-                .map(
-                  (a) => `
-                <tr>
-                  <td>${a.name}</td>
-                  <td>${a.email}</td>
-                  <td>${
-                    a.permissions?.map((p) => p.display_name).join(", ") || "-"
-                  }</td>
-                  <td>${a.store?.name || "-"}</td>
-                  <td>${a.phone || "-"}</td>
-           
-                </tr>`
-                )
-                .join("")}
-            </tbody>
-          </table>
-          <script>window.print();</script>
-        </body>
-      </html>
-    `;
-
-    printWindow.document.write(html);
-    printWindow.document.close();
-  };
 
   if (isLoading) return <p>{t("loading") || "جاري تحميل البيانات..."}</p>;
 
@@ -174,14 +97,7 @@ console.log(admins)
   return (
     <>
       <div className="flex justify-end gap-3 mb-4">
-        <Button onClick={exportToExcel}>
-          {t("excelExport") || "📁 تصدير Excel"}
-        </Button>
-        <Button
-          onClick={handlePrint}
-          className="bg-green-600 hover:bg-green-700">
-          {t("printTable") || "🖨️ طباعة"}
-        </Button>
+
       </div>
       <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
         <input
@@ -204,48 +120,21 @@ console.log(admins)
                 <TableCell
                   isHeader
                   className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400">
+                  {t("name") || "اسم الحساب"}
+                </TableCell>
+                <TableCell
+                  isHeader
+                  className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400">
                   {t("email") || "البريد الالكترونى"}
                 </TableCell>
-                <TableCell
-                  isHeader
-                  className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400">
-                  {t("permissions") || "الصلاحيات"}
-                </TableCell>
-                <TableCell
-                  isHeader
-                  className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400">
-                  {t("store") || "المخزن"}
-                </TableCell>
-                <TableCell
-                  isHeader
-                  className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400">
-                  {t("phone") || "الموبيل"}
-                </TableCell>
+
+
           
-                {/* <TableCell
-                  isHeader
-                  className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400">
-                  {t("baseSalary") || "الراتب الأساسي"}
-                </TableCell> */}
-                {/* <TableCell
-                  isHeader
-                  className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400">
-                  {t("hourlyRate") || "أجر الساعة"}
-                </TableCell> */}
-                {/* <TableCell
-                  isHeader
-                  className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400">
-                  {t("workStart") || "بداية الدوام"}
-                </TableCell> */}
-                {/* <TableCell
-                  isHeader
-                  className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400">
-                  {t("workEnd") || "نهاية الدوام"}
-                </TableCell> */}
+                
                 <TableCell
                   isHeader
                   className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400">
-                  {t("workDays") || "أيام العمل"}
+                  { "الرولز"}
                 </TableCell>
 
                 <TableCell
@@ -269,6 +158,9 @@ console.log(admins)
                     </div>
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                    {admin.username}
+                  </TableCell>
+                  <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
                     {admin.email}
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
@@ -284,29 +176,10 @@ console.log(admins)
                       </div>
                     )}
                   </TableCell>
-                  <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {admin.store.name}
-                  </TableCell>
-                  <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {admin.phone}
-                  </TableCell>
-                  {/* <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {admin.base_salary ?? "-"}
-                  </TableCell> */}
-                  {/* <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {admin.hourly_rate ?? "-"}
-                  </TableCell> */}
-                  {/* <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {admin.work_start_time ?? "-"}
-                  </TableCell> */}
-                  {/* <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {admin.work_end_time ?? "-"}
-                  </TableCell> */}
-                  <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {admin.work_days && admin.work_days.length > 0
-                      ? admin.work_days.join(", ")
-                      : "-"}
-                  </TableCell>
+         
+     
+                 
+
 
                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
                     <div className="flex space-x-2">
@@ -366,55 +239,20 @@ console.log(admins)
           <p className="text-gray-800">{tempAdmin?.name}</p>
         </div>
         <div>
+          <div>
+          <p className="font-semibold text-gray-600">اسم الحساب:</p>
+          <p className="text-gray-800">{tempAdmin?.username}</p>
+        </div>
+        <div></div>
           <p className="font-semibold text-gray-600">البريد الالكتروني:</p>
           <p className="text-gray-800">{tempAdmin?.email}</p>
         </div>
-        <div>
-          <p className="font-semibold text-gray-600">رقم الهاتف:</p>
-          <p className="text-gray-800">{tempAdmin?.phone}</p>
-        </div>
-        {/* <div>
-          <p className="font-semibold text-gray-600">نوع المستخدم:</p>
-          <p className="text-gray-800">{tempAdmin?.type}</p>
-        </div> */}
-        <div>
-          <p className="font-semibold text-gray-600">المخزن:</p>
-          <p className="text-gray-800">{tempAdmin?.store?.name}</p>
-        </div>
-        <div>
-          <p className="font-semibold text-gray-600">الراتب الأساسي:</p>
-          <p className="text-gray-800">{tempAdmin?.base_salary}</p>
-        </div>
-        <div>
-          <p className="font-semibold text-gray-600">الأجر بالساعة:</p>
-          <p className="text-gray-800">{tempAdmin?.hourly_rate}</p>
-        </div>
-        <div>
-          <p className="font-semibold text-gray-600">الرولز:</p>
-          <p className="text-gray-800">{tempAdmin?.role.join(", ")}</p>
-        </div>
-        <div className="col-span-2">
-          <p className="font-semibold text-gray-600">أيام العمل:</p>
-          <p className="text-gray-800">{tempAdmin?.work_days?.join(", ")}</p>
-        </div>
-        <div>
-          <p className="font-semibold text-gray-600">وقت البداية:</p>
-          <p className="text-gray-800">{tempAdmin?.work_start_time}</p>
-        </div>
-        <div>
-          <p className="font-semibold text-gray-600">وقت النهاية:</p>
-          <p className="text-gray-800">{tempAdmin?.work_end_time}</p>
-        </div>
+
+
+    
       </div>
 
-      {/* <div className="mt-6">
-        <h3 className="text-xl font-semibold mb-2">الصلاحيات:</h3>
-        <ul className="list-disc list-inside text-gray-800">
-          {tempAdmin.permissions?.map((perm, idx) => (
-            <li key={idx}>{perm.name}</li>
-          ))}
-        </ul>
-      </div> */}
+
     </div>
       </Modal>
     </>
