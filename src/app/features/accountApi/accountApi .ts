@@ -1,7 +1,8 @@
 // store/features/account/accountSlice.ts
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import Base_URL from "../../url";
 
-const BASE_URL = "https://keen-edu.com/backend/api";
+const BASE_URL = Base_URL;
 
 export const accountApi = createApi({
   reducerPath: "accountApi",

@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import Base_URL from "../url";
 
-const BASE_URL = "https://keen-edu.com/backend/api"; // triggers the proxy
+const BASE_URL = Base_URL;// triggers the proxy
 
 interface Ires {
   access_token: string;

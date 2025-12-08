@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { RootState } from "../../store";
+import Base_URL from "../../url";
 
 export interface IFormInputEduSys {
   name: string;
@@ -15,7 +16,7 @@ export interface IStudents {
   password?: string;
 }
 
-const BASE_URL = "https://keen-edu.com/backend/api/admin"; // triggers the proxy
+const BASE_URL = Base_URL;// triggers the proxy
 
 interface Ires {
   code: number;

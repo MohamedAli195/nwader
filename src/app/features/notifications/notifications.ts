@@ -1,6 +1,7 @@
 // store/featchers/notifications/notificationsSlice.ts
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { RootState } from "../../store";
+import Base_URL from "../../url";
 
 export interface NotificationData {
   id: string;
@@ -19,7 +20,7 @@ export interface NotificationData {
   read_at: string | null;
   created_at: string;
 }
-const BASE_URL = "https://keen-edu.com/backend/api"; // triggers the proxy
+const BASE_URL = Base_URL; // triggers the proxy
 export const notificationsApi = createApi({
   reducerPath: "notificationsApi",
   baseQuery: fetchBaseQuery({

@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { RootState } from "../../store";
+import Base_URL from "../../url";
 
 // 🧩 Interfaces
 export interface ISchoolBody {
@@ -68,7 +69,7 @@ export interface IPostSchoolResponse {
 }
 
 // 🧠 Base URL
-const BASE_URL = "https://keen-edu.com/backend/api/admin";
+const BASE_URL = Base_URL;
 
 // 🚀 API Slice
 export const SchoolsApi = createApi({
