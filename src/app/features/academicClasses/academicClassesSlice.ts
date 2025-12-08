@@ -3,6 +3,7 @@ import { RootState } from "../../store";
 // import { IEduSystems } from "../EduSystems/EduSystemsSlice";
 
 import { IAcademicYears } from "../academicYears/academicYearsSlice";
+import Base_URL from "../../url";
 
 export interface IFormInputClasses {
   name: string;
@@ -14,7 +15,7 @@ export interface IAcademicClasses {
   academic_year: IAcademicYears;
 }
 
-const BASE_URL = "https://keen-edu.com/backend/api/admin"; // triggers the proxy
+const BASE_URL = Base_URL; // triggers the proxy
 
 interface Ires {
   code: number;
