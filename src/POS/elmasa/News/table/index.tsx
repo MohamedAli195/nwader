@@ -117,7 +117,7 @@ export default function NewsTable() {
                     {newItem.title}
                   </TableCell>
                   <TableCell className="px-5 py-4 text-gray-600">
-                    {newItem.description}
+                    {newItem.content}
                   </TableCell>
                   <TableCell className="px-5 py-4">
                     <img
@@ -166,7 +166,7 @@ export default function NewsTable() {
               className="bg-white shadow rounded-lg p-4 flex flex-col gap-2"
             >
               <h2 className="font-semibold text-purple-700">{newItem.title}</h2>
-              <p className="text-gray-600 text-sm">{newItem.description}</p>
+              <p className="text-gray-600 text-sm">{newItem.content}</p>
               <img
                 src={
                   newItem.image_url ||

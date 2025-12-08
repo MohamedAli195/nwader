@@ -10,7 +10,7 @@ import {
 
 export interface IFormInputNews {
   title: string;
-  description: string;
+  content: string;
   image: FileList;
 }
 
@@ -42,7 +42,7 @@ export default function UpdateNewForm({ tempCat, onCloseUp }: IProps) {
   useEffect(() => {
     if (tempCat) {
       setValue("title", tempCat.title || "");
-      setValue("description", tempCat.description || "");
+      setValue("content", tempCat.content || "");
       // setValue("image", tempCat.image )
     }
   }, [setValue, tempCat]);
@@ -50,7 +50,7 @@ export default function UpdateNewForm({ tempCat, onCloseUp }: IProps) {
   const onSubmit: SubmitHandler<IFormInputNews> = async (data) => {
     const formData = new FormData();
     formData.append("title", data.title);
-    formData.append("description", data.description || "");
+    formData.append("content", data.content || "");
     // if (data.password) formData.append("password", data.password);
     if (data.image && data.image[0]) {
       formData.append("image", data.image[0]);
@@ -82,10 +82,10 @@ export default function UpdateNewForm({ tempCat, onCloseUp }: IProps) {
       onSubmit={handleSubmit(onSubmit)}
     >
       <div>
-        <label>الاسم</label>
+        <label>عنوان الخبر</label>
         <Input
           type="text"
-          {...register("title", { required: "الاسم مطلوب" })}
+          {...register("title", { required: "عنوان الخبر مطلوب" })}
         />
         {errors.title && (
           <p className="text-red-500 text-sm">{errors.title.message}</p>
@@ -93,18 +93,18 @@ export default function UpdateNewForm({ tempCat, onCloseUp }: IProps) {
       </div>
 
       <div>
-        <label>رقم الهاتف</label>
-        <Input type="text" {...register("description")} />
+        <label>الوصف</label>
+        <Input type="text" {...register("content")} />
       </div>
 
       <div>
-        <label>صورة المعلم</label>
+        <label>صورة الخبر</label>
         <Input type="file" accept="image/*" {...register("image")} />
       </div>
 
       <div>
         <Button className="w-full text-3xl" disabled={isLoading}>
-          {isLoading ? "جاري التحديث..." : "تحديث بيانات المعلم"}
+          {isLoading ? "جاري التحديث..." : "تحديث بيانات الخبر"}
         </Button>
       </div>
     </form>
