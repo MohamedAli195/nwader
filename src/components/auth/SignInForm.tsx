@@ -24,7 +24,7 @@ export default function SignInForm() {
       const result = await login({ email, password }).unwrap();
 
       // حفظ التوكن في الكوكيز
-      Cookies.set("token", result.access_token, {
+      Cookies.set("token", result.token, {
         expires: 14,
         secure: true,
         sameSite: "strict",

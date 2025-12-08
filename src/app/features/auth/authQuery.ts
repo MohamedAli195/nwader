@@ -4,7 +4,7 @@ import Base_URL from "../../url";
 const BASE_URL = Base_URL; // triggers the proxy
 
 interface Ires {
-  access_token: string;
+  token: string;
 }
 
 export const authApi = createApi({

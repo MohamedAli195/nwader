@@ -86,7 +86,7 @@ export const TeacherApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: BASE_URL,
     prepareHeaders: (headers, { getState }) => {
-      const token = (getState() as RootState).auth.access_token;
+      const token = (getState() as RootState).auth.token;
 
       if (token) {
         headers.set("Authorization", `Bearer ${token}`);

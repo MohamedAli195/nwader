@@ -8,12 +8,12 @@ export interface User {
 }
 
 interface AuthState {
-  access_token: string | null;
+  token: string | null;
   user: User | null;
 }
 
 const initialState: AuthState = {
-  access_token: null,
+  token: null,
   user: null,
 };
 
@@ -23,13 +23,13 @@ const authSlice = createSlice({
   reducers: {
     setCredentials: (
       state,
-      action: PayloadAction<{ access_token: string }>
+      action: PayloadAction<{ token: string }>
     ) => {
-      state.access_token = action.payload.access_token;
+      state.token = action.payload.token;
       state.user = null;
     },
     clearCredentials: (state) => {
-      state.access_token = null;
+      state.token = null;
       state.user = null;
     },
   },
