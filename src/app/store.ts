@@ -33,7 +33,7 @@ import { TuitionDiscountsApi } from "./features/TuitionDiscounts/TuitionDiscount
 const persistConfig = {
   key: "auth",
   storage: cookieStorage,
-  whitelist: ["access_token"], // Only persist token or full reducer as needed
+  whitelist: ["token"], // Only persist token or full reducer as needed
 };
 
 const persistedAuthReducer = persistReducer(persistConfig, authReducer);

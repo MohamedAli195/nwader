@@ -7,7 +7,7 @@ import {
   useMarkAllAsReadMutation,
   useMarkAsReadMutation,
 } from "../../app/features/notifications/notifications";
-import toast from "react-hot-toast";
+// import toast from "react-hot-toast";
 export default function NotificationDropdown() {
   const [isOpen, setIsOpen] = useState(false);
   const { data, refetch } = useGetNotificationsQuery(undefined, {
@@ -24,23 +24,23 @@ export default function NotificationDropdown() {
   const notifying = unreadCount > 0;
 
   // عرض التوست لكل إشعار جديد
-  useEffect(() => {
-    if (!data) return;
-    data.data.forEach((n) => {
-      if (!n.read_at) {
-        toast(n.data.message, {
-          id: n.id,
-          style: {
-            background: "#7C3AED", // اللون البنفسجي
-            color: "#FFFFFF", // لون الخط أبيض
-            padding: "10px 15px",
-            borderRadius: "10px",
-            fontWeight: "500",
-          },
-        }); // نستخدم id لتجنب تكرار التوست لنفس الإشعار
-      }
-    });
-  }, [data]);
+  // useEffect(() => {
+  //   if (!data) return;
+  //   data.data.forEach((n) => {
+  //     if (!n.read_at) {
+  //       toast(n.data.message, {
+  //         id: n.id,
+  //         style: {
+  //           background: "#7C3AED", // اللون البنفسجي
+  //           color: "#FFFFFF", // لون الخط أبيض
+  //           padding: "10px 15px",
+  //           borderRadius: "10px",
+  //           fontWeight: "500",
+  //         },
+  //       }); // نستخدم id لتجنب تكرار التوست لنفس الإشعار
+  //     }
+  //   });
+  // }, [data]);
 
   // إغلاق القائمة عند الضغط خارجها
   useEffect(() => {
@@ -134,12 +134,13 @@ export default function NotificationDropdown() {
                 className={`flex gap-3 items-center rounded-lg border-b border-gray-100 p-3 hover:bg-gray-100 ${
                   !n.read_at ? "bg-orange-50" : "bg-white"
                 }`}
-                to={n.data.action_url || "/"}
+                to={"/"}
+                // to={n.data.action_url || "/"}
               >
                 {!n.read_at && (
                   <span className="inline-block h-2 w-2 rounded-full bg-orange-400"></span>
                 )}
-                <span className="flex-1 text-gray-700">{n.data.message}</span>
+                {/* <span className="flex-1 text-gray-700">{n.data.message}</span> */}
                 <span className="text-gray-400 text-xs">
                   {new Date(n.created_at).toLocaleTimeString()}
                 </span>

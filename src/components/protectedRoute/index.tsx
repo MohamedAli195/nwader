@@ -12,7 +12,7 @@ function ProtectedRoute({
   children,
   redirect = "/signin",
 }: ProtectedRouteProps) {
-  const token = useSelector((state: RootState) => state.auth.access_token);
+  const token = useSelector((state: RootState) => state.auth.token);
 
   // const token = Boolean(Cookies.get(' useToken'));
   if (!token) return <Navigate to={redirect} />;

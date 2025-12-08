@@ -26,7 +26,7 @@ export const notificationsApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: BASE_URL,
     prepareHeaders: (headers, { getState }) => {
-      const token = (getState() as RootState).auth.access_token;
+      const token = (getState() as RootState).auth.token;
 
       if (token) {
         headers.set("Authorization", `Bearer ${token}`);
@@ -50,7 +50,8 @@ export const notificationsApi = createApi({
     }),
     markAsRead: builder.mutation({
       query: (id: string) => ({
-        url: `/admin/notifications/${id}/mark-as-read`,
+        url: `/`,
+        // url: `/admin/notifications/${id}/mark-as-read`,
         method: "POST",
       }),
     }),

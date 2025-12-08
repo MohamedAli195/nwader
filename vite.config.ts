@@ -17,10 +17,10 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "https://keen-edu.com/backend/api",
+        target: "https://3a3d946a5c3e.ngrok-free.app/api",
         changeOrigin: true,
         secure: false,
-        rewrite: (path) => path.replace(/^\/api/, ""),
+        rewrite: (path) => path.replace(/^\/api/, ""),  
       },
     },
   },

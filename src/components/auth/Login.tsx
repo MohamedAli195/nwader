@@ -31,15 +31,15 @@ export default function Login() {
   const onSubmit = async (formData: LoginFormInputs) => {
     try {
       const response = await login(formData).unwrap();
-      console.log(response); // يحتوي على access_token فقط
+      console.log(response); // يحتوي على token فقط
 
-      const token = response.access_token;
+      const token = response.token;
 
       if (token) {
-        Cookies.set("access_token", token, { expires: 7 }); // ✅ حفظ التوكن الصحيح
+        Cookies.set("token", token, { expires: 7 }); // ✅ حفظ التوكن الصحيح
 
         // إذا لم تكن تملك بيانات user حالياً من API
-        dispatch(setCredentials({ access_token: token }));
+        dispatch(setCredentials({ token: token }));
 
         navigate("/");
       }

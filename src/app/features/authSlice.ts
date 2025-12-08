@@ -1,12 +1,13 @@
 // services/authApi.ts
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import Cookies from "js-cookie";
+import Base_URL from "../url";
 
 export const authApi = createApi({
   reducerPath: "authApi",
   baseQuery: fetchBaseQuery({
 
-    baseUrl: "https://keen-edu.com/backend/api",
+    baseUrl: Base_URL,
 
 
 
@@ -22,7 +23,7 @@ export const authApi = createApi({
         try {
           const { data } = await queryFulfilled;
           // حفظ التوكن في الكوكيز
-          Cookies.set("access_token", data.access_token, {
+          Cookies.set("token", data.token, {
             expires: 14,
             secure: true,
             sameSite: "strict",
