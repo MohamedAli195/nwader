@@ -1,37 +1,20 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { RootState } from "../../store";
-
-import { IPermissions } from "../permissions/permissions";
 import Base_URL from "../../url";
-
-
 export interface IAdmins {
   id?: number | undefined;
   name: string;
+  username: string;
   email: string;
   password?: string;
-
-  phone: string;
-    permissions?: IPermissions[];
-      work_start_time?: string;
-  work_end_time?: string;
-  work_days?: string[];
-  base_salary?: string;
-  hourly_rate?: string;
 role : string[];
 }
 export interface ICreateAdminPayload {
   name: string;
+  username:string
   email: string;
-  phone: string;
   password: string;
-  store_id: string;
   roles: string[];
-   base_salary: number;
-  hourly_rate: number;
-  work_start_time: string;
-  work_end_time: string;
-  work_days: string[];
 }
 
 // const BASE_URL = "https://api.almajd-company.com/public/api"; // triggers the proxy
@@ -40,7 +23,13 @@ interface Ires {
   code: number;
   message: string;
   status: boolean;
-  data: { data: IAdmins[] | undefined; total: number | undefined };
+  data: IAdmins[];
+   meta: {
+    current_page: number;
+    last_page: number;
+    per_page: number;
+    total: number;
+  };
 }
 interface IresAdminsForStore {
   code: number;
@@ -77,12 +66,12 @@ export const adminsApi = createApi({
     }),
   tagTypes: ["Admins"], // ✅ Define tag type
   endpoints: (builder) => ({
-    getAdmins: builder.query<Ires, { search?: string; page: number }>({
-      query: ({ search = "", page = 1 }) => {
+    getAdmins: builder.query<Ires, { search?: string; per_page: number }>({
+      query: ({ search = "", per_page = 15 }) => {
         const params = new URLSearchParams();
-        params.append("page", page.toString());
+        params.append("per_page", per_page.toString());
         if (search) params.append("search", search);
-        return `/admins?${params.toString()}`;
+        return `/users?${params.toString()}`;
       },
       providesTags: ["Admins"],
     }),
@@ -90,7 +79,7 @@ export const adminsApi = createApi({
     getAdminsByStoreID: builder.query<IresAdminsForStore, string | undefined  >({
       query: (id) => {
    
-        return `/admins/${id}`;
+        return `/users/${id}`;
       },
       providesTags: ["Admins"],
     }),
@@ -112,7 +101,7 @@ export const adminsApi = createApi({
     //Example: createCategory mutation (to show how to invalidate)
     createAdmin: builder.mutation<IresPost, ICreateAdminPayload>({
       query: (FormData) => ({
-        url: `/admins`,
+        url: `/users`,
         method: "POST",
         body: FormData,
       }),
@@ -120,7 +109,7 @@ export const adminsApi = createApi({
     }),
     deleteAdmin: builder.mutation<IresPost, number | undefined>({
       query: (id) => ({
-        url: `/admins/${id}/delete`,
+        url: `/users/${id}`,
         method: "DELETE",
       }),
       invalidatesTags: ["Admins"],
@@ -128,8 +117,8 @@ export const adminsApi = createApi({
     updateAdmin: builder.mutation<IresPost, { id: number | undefined; data: ICreateAdminPayload }>(
       {
         query: ({ id, data }) => ({
-          url: `/admins/${id}/update`,
-          method: "POST",
+          url: `/users/${id}`,
+          method: "PUT",
           body: data,
         }),
         invalidatesTags: ["Admins"],

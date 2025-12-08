@@ -6,8 +6,7 @@ import Base_URL from "../../url";
 export interface IRole {
   id?: number;
   name: string;
-   permissions: string[]
-;
+  permissions: string[];
 }
 export interface IRoleResponse {
   code: number;
@@ -19,19 +18,14 @@ export interface IRolesListResponse {
   code: number;
   message: string;
   status: boolean;
-
-    data: IRole[];
-   
-  
-  meta:{
+  data: IRole[];
+  meta: {
     current_page: number;
-last_page: number;
-per_page: number;
-total: number;
-  }
+    last_page: number;
+    per_page: number;
+    total: number;
+  };
 }
-
-
 
 export const roleApi = createApi({
   reducerPath: "roleApi",
@@ -53,10 +47,10 @@ export const roleApi = createApi({
 
   endpoints: (builder) => ({
     // 👇 get all Roles
-    getRoles: builder.query<IRolesListResponse, number>({
-      query: (per=10) => `/roles?per_page=${per}`,
-      providesTags: ["roles"],
-    }),
+getRoles: builder.query<IRolesListResponse, number | void>({
+  query: (per = 10) => `/roles?per_page=${per}`,
+  providesTags: ["roles"],
+}),
 
     // 👇 get one
     getRole: builder.query<IRoleResponse, number>({

@@ -1,9 +1,11 @@
 import { useState } from "react";
-import ComponentCard from "../../components/common/ComponentCard";
+
 import AdminsTable from "./table";
-import { Modal } from "../../components/ui/modal";
+
 import AddAdmin from "./addForm";
 import { useTranslation } from "react-i18next";
+import ComponentCard from "../../../components/common/ComponentCard";
+import { Modal } from "../../../components/ui/modal";
 
 function AdminsPage() {
   const { t } = useTranslation();
