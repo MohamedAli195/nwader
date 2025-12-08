@@ -1,12 +1,13 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { RootState } from "../../store";
 // import BASE_URL from "../../Url";
-import { IPermissions } from "../permissions/permissions";
+// import { IPermissions } from "../permissions/permissions";
 import Base_URL from "../../url";
 export interface IRole {
   id?: number;
   name: string;
-  permissions: IPermissions[];
+   permissions: string[]
+;
 }
 export interface IRoleResponse {
   code: number;
@@ -18,10 +19,16 @@ export interface IRolesListResponse {
   code: number;
   message: string;
   status: boolean;
-  data: {
+
     data: IRole[];
-    total: number;
-  };
+   
+  
+  meta:{
+    current_page: number;
+last_page: number;
+per_page: number;
+total: number;
+  }
 }
 
 
@@ -46,8 +53,8 @@ export const roleApi = createApi({
 
   endpoints: (builder) => ({
     // 👇 get all Roles
-    getRoles: builder.query<IRolesListResponse, void>({
-      query: () => "/roles",
+    getRoles: builder.query<IRolesListResponse, number>({
+      query: (per=10) => `/roles?per_page=${per}`,
       providesTags: ["roles"],
     }),
 

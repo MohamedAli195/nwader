@@ -1,15 +1,15 @@
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
-import Input from "../../../components/form/input/InputField";
-import Button from "../../../components/ui/button/Button";
+
 import Swal from "sweetalert2";
 import { useTranslation } from "react-i18next";
-import { useCreateRoleMutation } from "../../../app/features/roles/roles";
-import {
-  IPermissions,
-  useGetPermissionsQuery,
-} from "../../../app/features/permissions/permissions";
+
+
 
 import Select from "react-select";
+import { useCreateRoleMutation } from "../../../../app/features/roles/roles";
+import { IPermissions, useGetPermissionsQuery } from "../../../../app/features/permissions/permissions";
+import Input from "../../../../components/form/input/InputField";
+import Button from "../../../../components/ui/button/Button";
 
 export interface IRoleFormInput {
   name: string;

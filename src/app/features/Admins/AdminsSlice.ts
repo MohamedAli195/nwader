@@ -1,15 +1,16 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { RootState } from "../../store";
-import { IStore } from "../stores/stores";
+
 import { IPermissions } from "../permissions/permissions";
-import BASE_URL from "../../Url";
+import Base_URL from "../../url";
+
 
 export interface IAdmins {
   id?: number | undefined;
   name: string;
   email: string;
   password?: string;
-  store: IStore;
+
   phone: string;
     permissions?: IPermissions[];
       work_start_time?: string;
@@ -63,7 +64,7 @@ interface IresPost {
 export const adminsApi = createApi({
   reducerPath: "adminsApi",
     baseQuery: fetchBaseQuery({
-      baseUrl: BASE_URL,
+      baseUrl: Base_URL,
       prepareHeaders: (headers, { getState }) => {
         const token = (getState() as RootState).auth.token;
         if (token) {

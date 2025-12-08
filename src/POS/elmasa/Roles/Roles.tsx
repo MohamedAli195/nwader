@@ -1,8 +1,9 @@
 import { useState } from "react";
-import ComponentCard from "../../components/common/ComponentCard";
-import { Modal } from "../../components/ui/modal";
-import RolesTable from "./viewBrand";
-import AddRole from "./AddBrands";
+
+import RolesTable from "./viewRole";
+import AddRole from "./AddRole";
+import { Modal } from "../../../components/ui/modal";
+import ComponentCard from "../../../components/common/ComponentCard";
 // import { useTranslation } from "react-i18next";
 
 const Roles = () => {

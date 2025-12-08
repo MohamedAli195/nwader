@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { RootState } from "../../store";
-import BASE_URL from "../../Url";
+import Base_URL from "../../url";
+
 export interface IPermissions {
  id: number,
             name: string,
@@ -30,7 +31,7 @@ interface Ires {
 export const PermissionsApi = createApi({
   reducerPath: "PermissionsApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: BASE_URL,
+    baseUrl: Base_URL,
     prepareHeaders: (headers, { getState }) => {
       const token = (getState() as RootState).auth.token;
 

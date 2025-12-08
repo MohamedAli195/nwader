@@ -11,6 +11,7 @@ import Complaints from "../POS/elmasa/complaints/complaints";
 import ComplaintDetails from "../POS/elmasa/complaints/complaintDetails/ComplaintDetails";
 import Inquiries from "../POS/elmasa/Inquiries/inquiries";
 import InquiriesDetails from "../POS/elmasa/Inquiries/inquiriesDetails/InquiriesDetails";
+import Roles from "../POS/elmasa/Roles/Roles";
 
 const TuitionDiscount = lazy(() => import("../POS/elmasa/TuitionDiscounts/TuitionDiscounts"));
 
@@ -80,6 +81,15 @@ const router = createBrowserRouter(
             </Suspense>
           }
         />
+        <Route
+          path="roles"
+          element={
+            <Suspense fallback={<Loading />}>
+              <Roles />
+            </Suspense>
+          }
+        />
+        
         <Route
           path="calendar"
           element={

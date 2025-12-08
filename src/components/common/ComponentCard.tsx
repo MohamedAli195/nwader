@@ -1,4 +1,5 @@
 import Button from "../ui/button/Button";
+import { useTranslation } from "react-i18next";
 
 interface ComponentCardProps {
   onOpen?: () => void;
@@ -6,7 +7,7 @@ interface ComponentCardProps {
   children: React.ReactNode;
   className?: string; // Additional custom classes for styling
   desc?: string; // Description text
-  isNotComplaint?:boolean
+  isAdd?: boolean;
 }
 
 const ComponentCard: React.FC<ComponentCardProps> = ({
@@ -14,23 +15,23 @@ const ComponentCard: React.FC<ComponentCardProps> = ({
   title,
   children,
   className = "",
-  isNotComplaint = true
+  isAdd = true,
 }) => {
+  const { t } = useTranslation();
+
   return (
     <div
-      className={`rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03] ${className}`}
-    >
+      className={`rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03] ${className}`}>
       {/* Card Header */}
       <div className="px-6 py-5 flex justify-between items-center">
         <h3 className="text-base font-medium text-gray-800 dark:text-white/90">
           {title}
         </h3>
-        {
-          isNotComplaint && <Button onClick={onOpen} className="bg-green-600 font-bold">
-          اضافة
-        </Button>
-        }
-        
+        {isAdd && (
+          <Button onClick={onOpen} className="bg-green-600 font-bold">
+            {t("addButton") || "اضافة"}
+          </Button>
+        )}
       </div>
 
       {/* Card Body */}

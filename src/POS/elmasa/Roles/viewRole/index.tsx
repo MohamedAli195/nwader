@@ -1,23 +1,21 @@
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { SerializedError } from "@reduxjs/toolkit";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHeader,
-  TableRow,
-} from "../../../components/ui/table";
-import Button from "../../../components/ui/button/Button";
+
 import { ChangeEvent, useRef, useState } from "react";
-import { Modal } from "../../../components/ui/modal";
-import UpdateRoleForm from "../UpdateBrand";
-import Paginator from "../../../components/ui/Pagination/Paginator";
+
+import UpdateRoleForm from "../UpdateRole";
+
 import Swal from "sweetalert2";
-import { useAppSelector } from "../../../app/hooks";
-import { RootState } from "../../../app/store";
-import { checkPermissions } from "../../../functions";
+
 import { useTranslation } from "react-i18next";
-import { IRole, useDeleteRoleMutation, useGetRolesQuery } from "../../../app/features/roles/roles";
+import { IRole, useDeleteRoleMutation, useGetRolesQuery } from "../../../../app/features/roles/roles";
+// import { useAppSelector } from "../../../../app/hooks";
+// import { RootState } from "../../../../app/store";
+import { Table, TableBody, TableCell, TableHeader, TableRow } from "../../../../components/ui/table";
+import Button from "../../../../components/ui/button/Button";
+import Paginator from "../../../../components/ui/Pagination/Paginator";
+import { Modal } from "../../../../components/ui/modal";
+
 
 const RolesTable = () => {
   const { t } = useTranslation();
@@ -26,7 +24,7 @@ const RolesTable = () => {
   const [isOpenUp, SetIsOpenUp] = useState(false);
   const [tempCat, SetTempCat] = useState<IRole>();
   const inputRef = useRef<HTMLInputElement>(null);
-
+  const per = 15
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
     SetSearch(e.target.value);
   };
@@ -75,82 +73,16 @@ const RolesTable = () => {
     isError,
     error,
     isSuccess,
-  } = useGetRolesQuery();
+  } = useGetRolesQuery(per);
+  console.log(roles)
+  // const permissions = useAppSelector(
+  //   (state: RootState) => state.auth.user?.permissions
+  // );
 
-  const permissions = useAppSelector(
-    (state: RootState) => state.auth.user?.permissions
-  );
+  const roless = roles?.data ?? [];
+  const total = roles?.meta?.total ?? 0;
 
-  const roless = roles?.data?.data ?? [];
-  const total = roles?.data?.total ?? 0;
-
-  // const handleExportExcel = () => {
-  //   if (!brandss.length) return;
-
-  //   const formatted = brandss.map((b) => ({
-  //     [t("id") || "الرقم"]: b.id,
-  //     [t("tableName") || "الاسم"]: b.name,
-  //     [t("tableNotes") || "الملاحظات"]: b.notes || "-",
-  //   }));
-
-  //   const worksheet = XLSX.utils.json_to_sheet(formatted);
-  //   const workbook = XLSX.utils.book_new();
-  //   XLSX.utils.book_append_sheet(workbook, worksheet, t("brands") || "Brands");
-  //   XLSX.writeFile(workbook, "brands.xlsx");
-  // };
-
-  // const handlePrint = () => {
-  //   if (!brandss.length) return;
-
-  //   const printContent = `
-  //     <html dir="rtl" lang="ar">
-  //       <head>
-  //         <title>${t("brands") || "العلامات التجارية"}</title>
-  //         <style>
-  //           body { font-family: sans-serif; direction: rtl; }
-  //           table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-  //           th, td { border: 1px solid #000; padding: 8px; text-align: center; }
-  //           th { background: #f0f0f0; }
-  //         </style>
-  //       </head>
-  //       <body>
-  //         <h2 style="text-align:center">${
-  //           t("brandsList") || "قائمة العلامات التجارية"
-  //         }</h2>
-  //         <table>
-  //           <thead>
-  //             <tr>
-  //               <th>${t("id") || "الرقم"}</th>
-  //               <th>${t("tableName") || "الاسم"}</th>
-  //               <th>${t("tableNotes") || "الملاحظات"}</th>
-  //             </tr>
-  //           </thead>
-  //           <tbody>
-  //             ${brandss
-  //               .map(
-  //                 (b) => `
-  //               <tr>
-  //                 <td>${b.id}</td>
-  //                 <td>${b.name}</td>
-  //                 <td>${b.notes || "-"}</td>
-  //               </tr>
-  //             `
-  //               )
-  //               .join("")}
-  //           </tbody>
-  //         </table>
-  //       </body>
-  //     </html>
-  //   `;
-
-  //   const printWindow = window.open("", "_blank");
-  //   if (printWindow) {
-  //     printWindow.document.write(printContent);
-  //     printWindow.document.close();
-  //     printWindow.print();
-  //   }
-  // };
-
+ 
   if (isLoading) return <h2>{t("loading") || "Loading..."}</h2>;
 
   if (isError) {
@@ -216,17 +148,17 @@ const RolesTable = () => {
                 <TableCell
                   isHeader
                   className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400">
-                  {t("brandName") || "اسم صلاحية المستخدم"}
+                  { "اسم صلاحية المستخدم"}
                 </TableCell>
           <TableCell
                   isHeader
                   className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400">
-                  {t("brandName") || "الصلاحيات"}
+                  { "الصلاحيات"}
                 </TableCell>
                 <TableCell
                   isHeader
                   className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400">
-                  {t("tableActions") || "عمليات"}
+                  { "عمليات"}
                 </TableCell>
               </TableRow>
             </TableHeader>
@@ -246,9 +178,9 @@ const RolesTable = () => {
                       <div className="flex flex-wrap gap-2 mt-2">
                         {role.permissions.map((perm) => (
                           <span
-                            key={perm.id}
+                            key={perm}
                             className="px-3 py-1 text-sm bg-blue-100 text-blue-700 rounded-full shadow-sm">
-                            {perm.display_name}
+                            {perm}
                           </span>
                         ))}
                       </div>
@@ -256,7 +188,7 @@ const RolesTable = () => {
                   </TableCell>
                     <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
                       <div className="flex space-x-4">
-                        {checkPermissions(permissions, "edit-brand") && (
+                        {/* {checkPermissions(permissions, "edit-brand") && ( */}
                           <Button
                             onClick={() => {
                               onOpenUp();
@@ -264,14 +196,14 @@ const RolesTable = () => {
                             }}>
                             {t("edit") || "تعديل"}
                           </Button>
-                        )}
-                        {checkPermissions(permissions, "delete-brand") && (
+                        {/* )} */}
+                        {/* {checkPermissions(permissions, "delete-brand") && ( */}
                           <Button
                             className="bg-red-500 hover:bg-red-600"
                             onClick={() => handleDelete(role?.id)}>
                             {t("delete") || "حذف"}
                           </Button>
-                        )}
+                        {/* )} */}
                       </div>
                     </TableCell>
                   </TableRow>

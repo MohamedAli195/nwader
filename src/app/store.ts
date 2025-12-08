@@ -29,6 +29,9 @@ import { notificationsApi } from "./features/notifications/notifications";
 import { EducationalInformationApi } from "./features/EducationsalInfo/educationalInfo";
 import { SchoolsApi } from "./features/schools/schoolsApi";
 import { TuitionDiscountsApi } from "./features/TuitionDiscounts/TuitionDiscountsApi";
+import { roleApi } from "./features/roles/roles";
+import { adminsApi } from "./features/Admins/AdminsSlice";
+import { PermissionsApi } from "./features/permissions/permissions";
 
 const persistConfig = {
   key: "auth",
@@ -59,6 +62,9 @@ export const store = configureStore({
     [EducationalInformationApi.reducerPath]: EducationalInformationApi.reducer,
     [SchoolsApi.reducerPath]: SchoolsApi.reducer,
     [TuitionDiscountsApi.reducerPath]: TuitionDiscountsApi.reducer,
+    [roleApi.reducerPath]: roleApi.reducer,
+    [adminsApi.reducerPath]: adminsApi.reducer,
+    [PermissionsApi.reducerPath]: PermissionsApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
@@ -82,6 +88,9 @@ export const store = configureStore({
       EducationalInformationApi.middleware,
       SchoolsApi.middleware,
       TuitionDiscountsApi.middleware,
+      roleApi.middleware,
+      adminsApi.middleware,
+      PermissionsApi.middleware,
     ),
 });
 
