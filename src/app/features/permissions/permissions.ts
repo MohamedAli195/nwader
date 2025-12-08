@@ -5,7 +5,7 @@ import Base_URL from "../../url";
 export interface IPermissions {
  id: number,
             name: string,
-            display_name:string
+            // display_name:string
 }
 
 // const BASE_URL = "https://api.almajd-company.com/public/api"; // triggers the proxy
@@ -49,7 +49,7 @@ export const PermissionsApi = createApi({
     getPermissions: builder.query<Ires, void>({
       query: () => {
         
-        return `/get-permissions`;
+        return `/permissions?per_page=15`;
       },
       providesTags: ["Permissions"],
     }),

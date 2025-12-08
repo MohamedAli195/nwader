@@ -20,7 +20,7 @@ export default function AddRole({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation();
   const [createRole, { isLoading }] = useCreateRoleMutation();
   const { data: permission } = useGetPermissionsQuery();
-
+  console.log(permission)
   const {
     register,
     handleSubmit,
@@ -31,7 +31,7 @@ export default function AddRole({ onClose }: { onClose: () => void }) {
   const options =
     permission?.data?.map((p: IPermissions) => ({
       value: p.name,
-      label: p.display_name,
+      label: p.name,
     })) || [];
 
   const onSubmit: SubmitHandler<IRoleFormInput> = async (data) => {

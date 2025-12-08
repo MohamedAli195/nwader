@@ -3,10 +3,15 @@ import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import Swal from "sweetalert2";
 import { useTranslation } from "react-i18next";
 
-
 import Select from "react-select";
-import { IRole, useUpdateRoleMutation } from "../../../../app/features/roles/roles";
-import { IPermissions, useGetPermissionsQuery } from "../../../../app/features/permissions/permissions";
+import {
+  IRole,
+  useUpdateRoleMutation,
+} from "../../../../app/features/roles/roles";
+import {
+  IPermissions,
+  useGetPermissionsQuery,
+} from "../../../../app/features/permissions/permissions";
 import Input from "../../../../components/form/input/InputField";
 import Button from "../../../../components/ui/button/Button";
 
@@ -20,44 +25,44 @@ export default function UpdateRole({
   role,
 }: {
   onClose: () => void;
-  role: IRole
+  role: IRole;
 }) {
+  console.log(role);
   const { t } = useTranslation();
   const [updateRole, { isLoading }] = useUpdateRoleMutation();
   const { data: permission } = useGetPermissionsQuery();
 
   const { register, handleSubmit, control } = useForm<IRoleFormInput>({
-  defaultValues: {
-    name: role.name,
-    permissions: role.permissions?.map((p: IPermissions) => p.name) || [],
-  },
-});
+    defaultValues: {
+      name: role.name,
+      permissions: role.permissions || [],
+    },
+  });
 
   const options =
     permission?.data?.map((p: IPermissions) => ({
       value: p.name,
-      label: p.display_name,
+      label: p.name,
     })) || [];
 
-const onSubmit: SubmitHandler<IRoleFormInput> = async (data) => {
-  const formData = new FormData();
-  // formData.append("_method", "PUT"); // لو Laravel
-  formData.append("name", data.name);
+  const onSubmit: SubmitHandler<IRoleFormInput> = async (data) => {
+    const formData = new FormData();
+    // formData.append("_method", "PUT"); // لو Laravel
+    formData.append("name", data.name);
 
-  data.permissions.forEach((p, index) =>
-    formData.append(`permissions[${index}]`, p)
-  );
+    data.permissions.forEach((p, index) =>
+      formData.append(`permissions[${index}]`, p)
+    );
 
-  try {
-    await updateRole({ id: role.id, formData }).unwrap(); // هنا صح
-    Swal.fire("تم", "تم تعديل الرول بنجاح", "success");
-    onClose();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  } catch (error) {
-    Swal.fire("خطأ", "حدث خطأ أثناء التعديل", "error");
-  }
-};
-
+    try {
+      await updateRole({ id: role.id, formData }).unwrap(); // هنا صح
+      Swal.fire("تم", "تم تعديل الرول بنجاح", "success");
+      onClose();
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error) {
+      Swal.fire("خطأ", "حدث خطأ أثناء التعديل", "error");
+    }
+  };
 
   return (
     <form className="p-5 space-y-4" onSubmit={handleSubmit(onSubmit)}>
