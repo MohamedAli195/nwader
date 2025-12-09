@@ -48,7 +48,7 @@ export default function UpdateAdminForm({ tempAdmin, onCloseUp }: IUpdateAdminPr
       setValue("name", tempAdmin?.name);
       setValue("username", tempAdmin?.username);
       setValue("email", tempAdmin?.email);
-      setValue("roles", tempAdmin?.role);
+      setValue("roles", tempAdmin?.roles);
     }
   }, [tempAdmin, setValue]);
 

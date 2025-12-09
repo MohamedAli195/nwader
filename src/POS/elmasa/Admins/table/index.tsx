@@ -164,9 +164,9 @@ console.log(admins)
                     {admin.email}
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {admin.role && admin.role.length > 0 && (
+                    {admin.roles && admin.roles.length > 0 && (
                       <div className="flex flex-wrap gap-2 mt-2">
-                        {admin.role.map((r) => (
+                        {admin.roles.map((r) => (
                           <span
                             key={r}
                             className="px-3 py-1 text-sm bg-blue-100 text-blue-700 rounded-full shadow-sm">

@@ -7,7 +7,7 @@ export interface IAdmins {
   username: string;
   email: string;
   password?: string;
-role : string[];
+roles : string[];
 }
 export interface ICreateAdminPayload {
   name: string;
