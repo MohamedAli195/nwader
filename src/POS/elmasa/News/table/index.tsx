@@ -25,6 +25,7 @@ export default function NewsTable() {
   const [isOpenUp, SetIsOpenUp] = useState(false);
 
   const News = data?.data ?? [];
+  console.log(News)
   const total = data?.meta?.total ?? 0;
   const [deleteNew] = useDeleteNewMutation();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -120,14 +121,16 @@ export default function NewsTable() {
                     {newItem.content}
                   </TableCell>
                   <TableCell className="px-5 py-4">
-                    <img
-                      src={
-                        newItem.image_url ||
-                        `https://ui-avatars.com/api/?name=${newItem.title}&background=8b5cf6&color=fff`
-                      }
-                      alt={newItem.title}
-                      className="h-16 w-16 object-cover rounded-lg border"
-                    />
+              
+                       <img
+          src={
+            newItem.image?.length
+              ? newItem.image[0]
+              : `https://ui-avatars.com/api/?name=${newItem.title}&background=8b5cf6&color=fff`
+          }
+          alt={newItem.title}
+          className="h-16 w-16 object-cover rounded-lg border mx-auto"
+        />
                   </TableCell>
                   <TableCell className="px-5 py-4 text-center">
                     <div className="flex flex-col sm:flex-row justify-center gap-2">

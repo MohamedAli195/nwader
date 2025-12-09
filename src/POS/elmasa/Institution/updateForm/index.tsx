@@ -1,156 +1,85 @@
-import { useEffect } from "react";
-// import Input from "../../../../components/form/input/InputField";
-import {
-  Booking,
-  useUpdateAcademicBookingsMutation,
-} from "../../../../app/features/academicBooking/academicBookingApi";
-import { CreateBookingRequest } from "../addForm";
+import { useEffect, useState } from "react";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import Select from "react-select";
 import Swal from "sweetalert2";
 import Button from "../../../../components/ui/button/Button";
-import { useGetAcademicStudentsQuery } from "../../../../app/features/academicStudent/academicStudentApi";
-import { useGetAcademicClassesQuery } from "../../../../app/features/academicClasses/academicClassesSlice";
-import { useState } from "react";
-import { format } from "date-fns";
-import DatePicker from "react-datepicker";
-import { useGetTeatchersQuery } from "../../../../app/features/teachers/teachersSlice";
-export interface IFormInputEduSys {
-  name: string;
-  phone: string;
-  // password: string;
+import {
+  CreateInstitutionRequest,
+  Institution,
+  useUpdateInstitutionMutation,
+} from "../../../../app/features/institution/institutionApi";
+
+interface ApiError {
+  data?: {
+    errors?: Record<string, string[]>;
+  };
 }
 
-interface IProps {
-  tempCat: Booking | undefined;
-  onCloseUp: () => void;
-}
-interface errorType {
-  data: {
-    errors: {
-      name: string[];
-      message: string;
-    };
-  };
-  status: number;
-}
 type Option = {
   label: string;
-  value: string | number;
+  value: string | boolean;
 };
-const confirmedOptions: Option[] = [
-  { value: "confirmed", label: "confirmed" },
-  { value: "pending", label: "pending" },
-  { value: "cancelled", label: "cancelled" },
+
+// نوع المؤسسة
+const institutionTypes: Option[] = [
+  { value: "university", label: "جامعة" },
+  { value: "institute", label: "معهد" },
+  { value: "school", label: "مدرسة" },
 ];
-export default function UpdateacademicBookingForm({
-  tempCat,
+
+// حالة التفعيل
+const activeOptions: Option[] = [
+  { value: true, label: "مفعل" },
+  { value: false, label: "غير مفعل" },
+];
+
+interface IProps {
+  tempInstitution: Institution;
+  onCloseUp: () => void;
+}
+
+export default function UpdateInstitutionForm({
+  tempInstitution,
   onCloseUp,
 }: IProps) {
-  console.log(tempCat);
-  const [BookingDate, setBookingDate] = useState<Date | null>(null);
-  // const DateForBooking = BookingDate ? format(BookingDate, "yyyy-MM-dd") : "";
-  // const [confirmedStatus, setConfirmedStatus] = useState<string | null>(
-  //   "confirmed"
-  // );
-  //fetch Students
-  const { data: studentDAta, isLoading: StudentLoad } =
-    useGetAcademicStudentsQuery({
-      search: "",
-      page: 1,
-    });
-  const Students = studentDAta?.data ?? [];
-  console.log(Students);
-  const eduSysOptions: Option[] =
-    Students.map((Student) => ({
-      value: Student.id || 1,
-      label: Student.name,
-    })) || [];
+  const [logoFile, setLogoFile] = useState<File | null>(null);
+  const [updateInstitution, { isLoading }] = useUpdateInstitutionMutation();
 
-  //fetch teatchers
-  const { data: teatchersDAta, isLoading: teatchersLoad } =
-    useGetTeatchersQuery({
-      search: "",
-      page: 1,
-    });
-  const teatchers = teatchersDAta?.data ?? [];
-  const teatchersOptions: Option[] =
-    teatchers.map((teatcher) => ({
-      value: teatcher.id?.toString() || "",
-      label: teatcher.name,
-    })) || [];
+  const { handleSubmit, setValue, control, register } =
+    useForm<CreateInstitutionRequest>();
 
-  //fetch Classes
-  const { data: ClassesData, isLoading: ClassesLoad } =
-    useGetAcademicClassesQuery({
-      search: "",
-      page: 1,
-    });
-  const classes = ClassesData?.data ?? [];
-  const classesOptions: Option[] =
-    classes.map((classe) => ({
-      value: classe.id || 1,
-      label: classe.name,
-    })) || [];
-  const [updateAcademicBookings, { isLoading }] =
-    useUpdateAcademicBookingsMutation();
-
-  const { handleSubmit, setValue, control } = useForm<CreateBookingRequest>({
-    defaultValues: {
-      status: "confirmed",
-    },
-  });
-
-  // Effect to populate form values if tempCat is available
-  // في useEffect
+  // تعيين القيم المبدئية
   useEffect(() => {
-    if (tempCat) {
-      setValue("student_id", tempCat.student.id);
-      setValue("teacher_id", tempCat.teacher.id);
-      setValue("class_id", tempCat.class_details.id);
-      setValue("booking_time", tempCat.booking_time);
-      setValue("status", tempCat.status);
-
-      setBookingDate(new Date(tempCat.booking_time));
-
-      // setValue("password", tempCat.password ?? "");
+    if (tempInstitution) {
+      setValue("name", tempInstitution.name);
+      setValue("type", tempInstitution.type);
+      setValue("description", tempInstitution.description || "");
+      setValue("address", tempInstitution.address || "");
+      setValue("phone", tempInstitution.phone || "");
+      setValue("email", tempInstitution.email || "");
+      setValue("website", tempInstitution.website || "");
+      setValue("is_active", tempInstitution.is_active);
     }
-  }, [tempCat, setValue]);
+  }, [tempInstitution, setValue]);
 
-  // Form submission handler
-  const onSubmit: SubmitHandler<CreateBookingRequest> = async (data) => {
-    if (!tempCat?.id) {
-      Swal.fire("خطأ", "لا يوجد معرف صالح للحجز المراد تعديله", "error");
-      return;
-    }
-
-    if (!BookingDate) {
-      Swal.fire("خطأ", "يرجى اختيار تاريخ الحجز", "error");
-      return;
-    }
-
+  const onSubmit: SubmitHandler<CreateInstitutionRequest> = async (data) => {
     try {
-      await updateAcademicBookings({
-        id: Number(tempCat?.id ?? tempCat?.booking_id),
-        body: {
-          student_id: data.student_id,
-          teacher_id: data.teacher_id,
-          class_id: data.class_id,
-          booking_time: format(BookingDate, "yyyy-MM-dd HH:mm:ss"),
-          status: data.status,
-        },
-      }).unwrap();
+      // إرسال File فقط إذا اختار المستخدم شعار جديد
+      const body: CreateInstitutionRequest = {
+        ...data,
+        logo: logoFile ?? null,
+      };
 
-      Swal.fire("تم", "تم التحديث بنجاح", "success");
+      await updateInstitution({ id: tempInstitution.id, data: body }).unwrap();
+      Swal.fire("تم", "تم تعديل المؤسسة بنجاح", "success");
       onCloseUp();
-    } catch (error: unknown) {
-      const err = error as errorType;
-
+    } catch (err: unknown) {
+      const error = err as ApiError;
       Swal.fire(
         "خطأ",
-        err?.data?.errors?.name
-          ? err.data.errors.name.join("\n")
-          : "حدث خطأ أثناء التحديث",
+        error?.data?.errors
+          ? Object.values(error.data.errors).flat().join("\n")
+          : "حدث خطأ غير متوقع",
         "error"
       );
     }
@@ -158,122 +87,116 @@ export default function UpdateacademicBookingForm({
 
   return (
     <form
-      className="flex justify-center  flex-col my-12 gap-2 p-5 w-full "
+      className="flex flex-col gap-3 my-12 p-5 w-full"
       onSubmit={handleSubmit(onSubmit)}
     >
-      {/* Name inputs for different languages */}
-
-      <div className="flex items-center gap-1">
-        <label className="block mb-1">الطالب</label>
-        <Controller
-          control={control}
-          name="student_id"
-          render={({ field }) => (
-            <Select<Option, false>
-              {...field}
-              options={eduSysOptions}
-              isClearable
-              className="w-auto"
-              isLoading={StudentLoad}
-              placeholder="اسم الطالب"
-              onChange={(val) => {
-                field.onChange(val?.value ?? null);
-              }}
-              value={eduSysOptions.find((opt) => opt.value === field.value)}
-            />
-          )}
-        />
-      </div>
-
-      <div className="flex items-center gap-1">
-        <label className="block mb-1">المعلم</label>
-        <Controller
-          control={control}
-          name="teacher_id"
-          render={({ field }) => (
-            <Select<Option, false>
-              {...field}
-              options={teatchersOptions}
-              isClearable
-              className="w-auto"
-              isLoading={teatchersLoad}
-              placeholder="اسم المعلم"
-              onChange={(val) => {
-                field.onChange(val?.value ?? null);
-              }}
-              value={teatchersOptions.find(
-                (opt) => Number(opt.value) === Number(field.value)
-              )}
-            />
-          )}
-        />
-      </div>
-
-      <div className="flex items-center gap-1">
-        <label className="block mb-1">الماده</label>
-        <Controller
-          control={control}
-          name="class_id"
-          render={({ field }) => (
-            <Select<Option, false>
-              {...field}
-              options={classesOptions}
-              isClearable
-              className="w-auto"
-              isLoading={ClassesLoad}
-              placeholder="اسم المادة"
-              onChange={(val) => {
-                field.onChange(val?.value ?? null);
-              }}
-              value={classesOptions.find((opt) => opt.value === field.value)}
-            />
-          )}
-        />
-      </div>
-
-      <div className="flex items-center gap-2">
-        <label className="whitespace-nowrap">تاريخ الحجز</label>
-        <DatePicker
-          selected={BookingDate}
-          onChange={(date) => setBookingDate(date)}
-          dateFormat="yyyy-MM-dd"
-          placeholderText="اختر التاريخ "
-          className="border px-2 py-1 rounded-md"
-          isClearable
-          showTimeSelect
-          timeFormat="HH:mm"
-          timeIntervals={15}
-          timeCaption="الوقت"
-        />
-      </div>
-      <div className="flex items-center gap-1">
-        <label className="block mb-1">حالة الحجز</label>
-        <Controller
-          control={control}
-          name="status"
-          render={({ field }) => (
-            <Select<Option, false>
-              {...field}
-              options={confirmedOptions}
-              isClearable
-              className="w-auto"
-              placeholder="حالة الحجز"
-              onChange={(val) => field.onChange(val?.value ?? null)}
-              value={confirmedOptions.find((opt) => opt.value === field.value)}
-            />
-          )}
-        />
-      </div>
-      {/* Submit button */}
+      {/* الاسم */}
       <div>
-        <Button className="w-full text-3xl" disabled={isLoading}>
-          {isLoading ? "انتظر..." : "تعديل"}
+        <label className="block mb-1">اسم المؤسسة</label>
+        <input
+          {...register("name", { required: true })}
+          className="border p-2 rounded w-full"
+        />
+      </div>
+
+      {/* النوع */}
+      <div>
+        <label className="block mb-1">نوع المؤسسة</label>
+        <Controller
+          control={control}
+          name="type"
+          render={({ field }) => (
+            <Select
+              {...field}
+              options={institutionTypes}
+              placeholder="اختر النوع"
+              onChange={(val) => field.onChange(val?.value)}
+              value={institutionTypes.find((opt) => opt.value === field.value)}
+            />
+          )}
+        />
+      </div>
+
+      {/* الوصف */}
+      <div className="hidden">
+        <label className="block mb-1">الوصف</label>
+        <textarea
+          {...register("description")}
+          className="border p-2 rounded w-full"
+        />
+      </div>
+
+      {/* العنوان */}
+      <div className="hidden">
+        <label className="block mb-1">العنوان</label>
+        <input
+          {...register("address")}
+          className="border p-2 rounded w-full"
+        />
+      </div>
+
+      {/* الهاتف */}
+      <div className="hidden">
+        <label className="block mb-1">رقم الهاتف</label>
+        <input
+          {...register("phone")}
+          className="border p-2 rounded w-full"
+        />
+      </div>
+
+      {/* البريد */}
+      <div className="hidden">
+        <label className="block mb-1">البريد الإلكتروني</label>
+        <input
+          {...register("email")}
+          className="border p-2 rounded w-full"
+        />
+      </div>
+
+      {/* الموقع */}
+      <div className="hidden">
+        <label className="block mb-1">الموقع الإلكتروني</label>
+        <input
+          {...register("website")}
+          className="border p-2 rounded w-full"
+        />
+      </div>
+
+      {/* الشعار */}
+      <div className="hidden">
+        <label className="block mb-1">الشعار (Logo)</label>
+        <input
+          type="file"
+          accept="image/*"
+          onChange={(e) => setLogoFile(e.target.files?.[0] ?? null)}
+          className="border p-2 rounded w-full"
+        />
+      </div>
+
+      {/* حالة التفعيل */}
+      <div >
+        <label className="block mb-1">حالة التفعيل</label>
+        <Controller
+          control={control}
+          name="is_active"
+          render={({ field }) => (
+            <Select
+              {...field}
+              options={activeOptions}
+              placeholder="اختر الحالة"
+              onChange={(val) => field.onChange(val?.value)}
+              value={activeOptions.find((opt) => opt.value === field.value)}
+            />
+          )}
+        />
+      </div>
+
+      {/* زر الإرسال */}
+      <div>
+        <Button className="w-full text-xl" disabled={isLoading}>
+          {isLoading ? "جارٍ التحديث..." : "تحديث المؤسسة"}
         </Button>
       </div>
-
-      {/* Error and success handling */}
-      {/* {isError && <p style={{ color: "red" }}>Error: {error?.message}</p>} */}
-      {/* {data && <p style={{ color: "green" }}>Student added successfully!</p>} */}
     </form>
   );
 }

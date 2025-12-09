@@ -1,246 +1,167 @@
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import Select from "react-select";
 import Swal from "sweetalert2";
-import { errorType } from "../../../../types";
 import Button from "../../../../components/ui/button/Button";
-import { useGetAcademicStudentsQuery } from "../../../../app/features/academicStudent/academicStudentApi";
-import { useCreateAcademicBookingsMutation } from "../../../../app/features/academicBooking/academicBookingApi";
-import { useGetAcademicClassesQuery } from "../../../../app/features/academicClasses/academicClassesSlice";
 import { useState } from "react";
-import { format } from "date-fns";
-import DatePicker from "react-datepicker";
-import { useGetTeatchersQuery } from "../../../../app/features/teachers/teachersSlice";
-
-export interface CreateBookingRequest {
-  student_id: number;
-  teacher_id: number;
-  class_id: number;
-  booking_time: string; // format: "YYYY-MM-DD HH:mm:ss"
-  status: string; // optionally narrow the type if you know possible statuses
+import {
+  CreateInstitutionRequest,
+  useAddInstitutionMutation,
+} from "../../../../app/features/institution/institutionApi";
+interface ApiError {
+  data?: {
+    errors?: Record<string, string[]>;
+  };
 }
+
 type Option = {
   label: string;
-  value: string | number;
+  value: string | number | boolean;
 };
-const confirmedOptions: Option[] = [
-  { value: "confirmed", label: "confirmed" },
-  { value: "pending", label: "pending" },
-  { value: "cancelled", label: "cancelled" },
+
+// نوع المؤسسة
+const institutionTypes: Option[] = [
+  { value: "university", label: "جامعة" },
+  { value: "institute", label: "معهد" },
+  { value: "school", label: "مدرسة" },
 ];
-export default function AddAcademicBooking({
-  onClose,
-}: {
-  onClose: () => void;
-}) {
-  // const [eduSysData, setEduSysData] = useState<IEduSystems | null>(null);
-  //state
 
-  const [BookingDate, setBookingDate] = useState<Date | null>(null);
-  // const DateForBooking = BookingDate ? format(BookingDate, "yyyy-MM-dd") : "";
-  // const [confirmedStatus, setConfirmedStatus] = useState<string | null>(
-  //   "confirmed"
-  // );
-  //fetch suppliers
-  const { data: studentDAta, isLoading: StudentLoad } =
-    useGetAcademicStudentsQuery({
-      search: "",
-      page: 1,
-    });
-  const Students = studentDAta?.data ?? [];
-  const eduSysOptions: Option[] =
-    Students.map((Student) => ({
-      value: Student.id?.toString() || "",
-      label: Student.name,
-    })) || [];
+// حالة التفعيل
+const activeOptions: Option[] = [
+  { value: true, label: "مفعل" },
+  { value: false, label: "غير مفعل" },
+];
 
-  //fetch teatchers
-  const { data: teatchersDAta, isLoading: teatchersLoad } =
-    useGetTeatchersQuery({
-      search: "",
-      page: 1,
-    });
-  const teatchers = teatchersDAta?.data ?? [];
-  const teatchersOptions: Option[] =
-    teatchers.map((teatcher) => ({
-      value: teatcher.id?.toString() || "",
-      label: teatcher.name,
-    })) || [];
+export default function AddInstitution({ onClose }: { onClose: () => void }) {
+  const [logoFile, setLogoFile] = useState<File | null>(null);
 
-  //fetch Classes
-  const { data: ClassesData, isLoading: ClassesLoad } =
-    useGetAcademicClassesQuery({
-      search: "",
-      page: 1,
-    });
-  const classes = ClassesData?.data ?? [];
-  const classesOptions: Option[] =
-    classes.map((classe) => ({
-      value: classe.id?.toString() || "",
-      label: classe.name,
-    })) || [];
+  const [addInstitution, { isLoading }] = useAddInstitutionMutation();
 
-  const [createAcademicBookings, { data, isLoading }] =
-    useCreateAcademicBookingsMutation();
+  const { handleSubmit, control, register } =
+    useForm<CreateInstitutionRequest>();
 
-  const {
-    // register,
-    handleSubmit,
-    control,
-    // formState: { errors },
-  } = useForm<CreateBookingRequest>({
-    defaultValues: {
-      status: "confirmed",
-    },
-  });
-
-  const onSubmit: SubmitHandler<CreateBookingRequest> = async (data) => {
-    // Prepare FormData to send as a POST request
-    if (!BookingDate) {
-      Swal.fire("خطأ", "يرجى اختيار تاريخ الحجز", "error");
-      return;
-    }
-    const formData = new FormData();
-    formData.append("student_id", String(data.student_id));
-    formData.append("teacher_id", String(data.teacher_id));
-    formData.append("class_id", String(data.class_id));
-    formData.append("booking_time", format(BookingDate, "yyyy-MM-dd HH:mm:ss"));
-    formData.append("status", data.status);
-    console.log(formData);
-
+  const onSubmit: SubmitHandler<CreateInstitutionRequest> = async (data) => {
     try {
-      await createAcademicBookings(formData).unwrap(); // This will throw if there's an error
-      Swal.fire("تم ", "تم بنجاح", "success");
-    } catch (error: unknown) {
-      const err = error as errorType;
+      const body: CreateInstitutionRequest = {
+        ...data,
+        logo: logoFile,
+      };
 
-      Swal.fire(
-        "Error",
-        err?.data?.errors?.name
-          ? err.data.errors.name.join("\n")
-          : "Something went wrong",
-        "error"
-      );
+      await addInstitution(body).unwrap();
+
+      Swal.fire("تم", "تم إضافة المؤسسة بنجاح", "success");
+      onClose();
+    } catch (err: unknown) {
+  const error = err as ApiError; // نحدد النوع هنا فقط بعد catch
+  Swal.fire(
+    "خطأ",
+    error?.data?.errors
+      ? Object.values(error.data.errors).flat().join("\n")
+      : "حدث خطأ غير متوقع",
+    "error"
+  );
     }
-    onClose();
   };
 
   return (
-    /* "handleSubmit" will validate your inputs before invoking "onSubmit" */
     <form
-      className="flex justify-center  flex-col my-12 gap-2 p-5 w-full "
+      className="flex flex-col gap-3 my-12 p-5 w-full"
       onSubmit={handleSubmit(onSubmit)}
     >
-      {/* Name inputs for different languages */}
-
-      <div className="flex items-center gap-1">
-        <label className="block mb-1">الطالب</label>
-        <Controller
-          control={control}
-          name="student_id"
-          render={({ field }) => (
-            <Select<Option, false>
-              {...field}
-              options={eduSysOptions}
-              isClearable
-              className="w-auto"
-              isLoading={StudentLoad}
-              placeholder="اسم الطالب"
-              onChange={(val) => {
-                field.onChange(val?.value ?? null);
-              }}
-              value={eduSysOptions.find((opt) => opt.value === field.value)}
-            />
-          )}
-        />
-      </div>
-
-      <div className="flex items-center gap-1">
-        <label className="block mb-1">المعلم</label>
-        <Controller
-          control={control}
-          name="teacher_id"
-          render={({ field }) => (
-            <Select<Option, false>
-              {...field}
-              options={teatchersOptions}
-              isClearable
-              className="w-auto"
-              isLoading={teatchersLoad}
-              placeholder="اسم المعلم"
-              onChange={(val) => {
-                field.onChange(val?.value ?? null);
-              }}
-              value={teatchersOptions.find((opt) => opt.value === field.value)}
-            />
-          )}
-        />
-      </div>
-
-      <div className="flex items-center gap-1">
-        <label className="block mb-1">الماده</label>
-        <Controller
-          control={control}
-          name="class_id"
-          render={({ field }) => (
-            <Select<Option, false>
-              {...field}
-              options={classesOptions}
-              isClearable
-              className="w-auto"
-              isLoading={ClassesLoad}
-              placeholder="اسم المادة"
-              onChange={(val) => {
-                field.onChange(val?.value ?? null);
-              }}
-              value={classesOptions.find((opt) => opt.value === field.value)}
-            />
-          )}
-        />
-      </div>
-
-      <div className="flex items-center gap-2">
-        <label className="whitespace-nowrap">تاريخ الحجز</label>
-        <DatePicker
-          selected={BookingDate}
-          onChange={(date) => setBookingDate(date)}
-          dateFormat="yyyy-MM-dd"
-          placeholderText="اختر التاريخ "
-          className="border px-2 py-1 rounded-md"
-          isClearable
-          showTimeSelect
-          timeFormat="HH:mm"
-          timeIntervals={15}
-          timeCaption="الوقت"
-        />
-      </div>
-      <div className="flex items-center gap-1">
-        <label className="block mb-1">حالة الحجز</label>
-        <Controller
-          control={control}
-          name="status"
-          render={({ field }) => (
-            <Select<Option, false>
-              {...field}
-              options={confirmedOptions}
-              isClearable
-              className="w-auto"
-              placeholder="حالة الحجز"
-              onChange={(val) => field.onChange(val?.value ?? null)}
-              value={confirmedOptions.find((opt) => opt.value === field.value)}
-            />
-          )}
-        />
-      </div>
-      {/* Submit button */}
+      {/* الاسم */}
       <div>
-        <Button className="w-full text-3xl" disabled={isLoading}>
-          {isLoading ? "انتظر..." : " اضافة طالب"}
+        <label className="block mb-1">اسم المؤسسة</label>
+        <input
+          {...register("name", { required: true })}
+          className="border p-2 rounded w-full"
+        />
+      </div>
+
+      {/* النوع */}
+      <div>
+        <label className="block mb-1">نوع المؤسسة</label>
+        <Controller
+          control={control}
+          name="type"
+          render={({ field }) => (
+            <Select<Option, false>
+              {...field}
+              options={institutionTypes}
+              placeholder="اختر النوع"
+              onChange={(val) => field.onChange(val?.value)}
+              value={institutionTypes.find((opt) => opt.value === field.value)}
+            />
+          )}
+        />
+      </div>
+
+      {/* الوصف */}
+      <div className="hidden">
+        <label className="block mb-1">الوصف</label>
+        <textarea
+          {...register("description")}
+          className="border p-2 rounded w-full"
+        />
+      </div>
+
+      {/* العنوان */}
+      <div className="hidden">
+        <label className="block mb-1">العنوان</label>
+        <input {...register("address")} className="border p-2 rounded w-full" />
+      </div>
+
+      {/* الهاتف */}
+      <div className="hidden">
+        <label className="block mb-1">رقم الهاتف</label>
+        <input {...register("phone")} className="border p-2 rounded w-full" />
+      </div>
+
+      {/* البريد */}
+      <div className="hidden">
+        <label className="block mb-1">البريد الإلكتروني</label>
+        <input {...register("email")} className="border p-2 rounded w-full" />
+      </div>
+
+      {/* الموقع */}
+      <div className="hidden">
+        <label className="block mb-1">الموقع الإلكتروني</label>
+        <input {...register("website")} className="border p-2 rounded w-full" />
+      </div>
+
+      {/* الشعار */}
+      <div className="hidden">
+        <label className="block mb-1">الشعار (Logo)</label>
+        <input
+          type="file"
+          accept="image/*"
+          onChange={(e) => setLogoFile(e.target.files?.[0] || null)}
+          className="border p-2 rounded w-full"
+        />
+      </div>
+
+      {/* حالة التفعيل */}
+      <div>
+        <label className="block mb-1">حالة التفعيل</label>
+        <Controller
+          control={control}
+          name="is_active"
+          render={({ field }) => (
+            <Select<Option, false>
+              {...field}
+              options={activeOptions}
+              placeholder="اختر الحالة"
+              onChange={(val) => field.onChange(val?.value ?? false)}
+              value={activeOptions.find((opt) => opt.value === field.value)}
+            />
+          )}
+        />
+      </div>
+
+      {/* زر الإرسال */}
+      <div>
+        <Button className="w-full text-xl" disabled={isLoading}>
+          {isLoading ? "جارٍ الإضافة..." : "إضافة المؤسسة"}
         </Button>
       </div>
-
-      {/* Error and success handling */}
-      {/* {isError && <p style={{ color: "red" }}>Error: {error?.message}</p>} */}
-      {data && <p style={{ color: "green" }}>Student added successfully!</p>}
     </form>
   );
 }

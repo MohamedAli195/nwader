@@ -111,7 +111,7 @@ export const newsApi = createApi({
     updateNew: builder.mutation<IresPost, { id: number; body: FormData }>({
       query: ({ id, body }) => ({
         url: `/news/${id}`,
-        method: "PUT",
+        method: "POST",
         body,
       }),
       invalidatesTags: ["News"],

@@ -1,6 +1,5 @@
 import { ChangeEvent, useRef, useState } from "react";
 import Swal from "sweetalert2";
-import dayjs from "dayjs";
 import {
   Table,
   TableBody,
@@ -11,36 +10,38 @@ import {
 import Button from "../../../../components/ui/button/Button";
 import Paginator from "../../../../components/ui/Pagination/Paginator";
 import { Modal } from "../../../../components/ui/modal";
-import UpdateacademicBookingForm from "../updateForm";
+
 import {
-  Booking,
-  useDeleteAcademicBookingsMutation,
-  useGetAcademicBookingsQuery,
-} from "../../../../app/features/academicBooking/academicBookingApi";
+  Institution,
+  useDeleteInstitutionMutation,
+  useGetInstitutionsQuery,
+} from "../../../../app/features/institution/institutionApi";
+import UpdateInstitutionForm from "../updateForm";
+interface ApiError {
+  data?: {
+    errors?: Record<string, string[]>;
+  };
+}
+export default function InstitutionsTable() {
+  const [page, setPage] = useState(1);
+  const [search, setSearch] = useState("");
 
-export default function AcadimicBookingsTable() {
-  const [page, SetPage] = useState(1);
-  const [search, SetSearch] = useState("");
+  const { data, error, isLoading } = useGetInstitutionsQuery(page);
 
-  const { data, error, isLoading } = useGetAcademicBookingsQuery({
-    page,
-    search,
-  });
+  const [isOpenUp, setIsOpenUp] = useState(false);
+  const [tempInstitution, setTempInstitution] = useState<Institution | undefined>();
 
-  const [isOpenUp, SetIsOpenUp] = useState(false);
-  const [tempCat, SetTempCat] = useState<Booking | undefined>();
+  const onCloseUp = () => setIsOpenUp(false);
+  const onOpenUp = () => setIsOpenUp(true);
 
-  const onCloseUp = () => SetIsOpenUp(false);
-  const onOpenUp = () => SetIsOpenUp(true);
-
-  const Bookings = data?.data ?? [];
+  const institutions = data?.data ?? [];
   const total = data?.meta?.total ?? 0;
 
-  const [deleteAcademicBookings] = useDeleteAcademicBookingsMutation();
+  const [deleteInstitution] = useDeleteInstitutionMutation();
 
   const handleDelete = async (id: number | undefined) => {
     if (!id) {
-      Swal.fire("خطأ", "رقم الحجز غير صالح", "error");
+      Swal.fire("خطأ", "المؤسسة غير صالحة", "error");
       return;
     }
 
@@ -59,17 +60,24 @@ export default function AcadimicBookingsTable() {
 
     if (result.isConfirmed) {
       try {
-        await deleteAcademicBookings(id).unwrap();
-        Swal.fire("تم الحذف!", "تم حذف الحجز بنجاح.", "success");
-      } catch (error) {
-        Swal.fire("خطأ", `حدث خطأ أثناء الحذف! ${error} `, "error");
+        await deleteInstitution(id).unwrap();
+        Swal.fire("تم الحذف!", "تم حذف المؤسسة بنجاح.", "success");
+      } catch (err: unknown) {
+        const error = err as ApiError; // نحدد النوع هنا فقط بعد catch
+        Swal.fire(
+          "خطأ",
+          error?.data?.errors
+            ? Object.values(error.data.errors).flat().join("\n")
+            : "حدث خطأ غير متوقع",
+          "error"
+        );
       }
     }
   };
 
   const inputRef = useRef<HTMLInputElement>(null);
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) =>
-    SetSearch(e.target.value);
+    setSearch(e.target.value);
 
   if (isLoading) return <p>جاري تحميل البيانات...</p>;
   if (error) return <p className="text-red-500">حدث خطأ أثناء جلب البيانات!</p>;
@@ -98,31 +106,31 @@ export default function AcadimicBookingsTable() {
                   isHeader
                   className="px-5 py-3 font-semibold text-purple-700 text-start"
                 >
-                  اسم الطالب
+                  الاسم
                 </TableCell>
                 <TableCell
                   isHeader
                   className="px-5 py-3 font-semibold text-purple-700 text-start"
                 >
-                  اسم المدرس
+                  النوع
+                </TableCell>
+                <TableCell
+                  isHeader
+                  className="px-5 py-3 font-semibold text-purple-700 text-start hidden"
+                >
+                  البريد الإلكتروني
+                </TableCell>
+                <TableCell
+                  isHeader
+                  className="px-5 py-3 font-semibold text-purple-700 text-start hidden"
+                >
+                  الهاتف
                 </TableCell>
                 <TableCell
                   isHeader
                   className="px-5 py-3 font-semibold text-purple-700 text-start"
                 >
-                  اسم المادة
-                </TableCell>
-                <TableCell
-                  isHeader
-                  className="px-5 py-3 font-semibold text-purple-700 text-start"
-                >
-                  ميعاد الحجز
-                </TableCell>
-                <TableCell
-                  isHeader
-                  className="px-5 py-3 font-semibold text-purple-700 text-start"
-                >
-                  حالة الحجز
+                  الحالة
                 </TableCell>
                 <TableCell
                   isHeader
@@ -134,27 +142,25 @@ export default function AcadimicBookingsTable() {
             </TableHeader>
 
             <TableBody className="divide-y divide-gray-100 dark:divide-gray-700">
-              {Bookings.map((booking) => (
+              {institutions.map((inst) => (
                 <TableRow
-                  key={booking.id ?? booking.booking_id}
+                  key={inst.id}
                   className="hover:bg-gray-50 dark:hover:bg-gray-800 transition"
                 >
                   <TableCell className="px-5 py-4 text-gray-900 dark:text-gray-100 font-medium">
-                    {booking.student?.name || "-"}
+                    {inst.name}
                   </TableCell>
                   <TableCell className="px-5 py-4 text-gray-600 dark:text-gray-400">
-                    {booking.teacher?.name || "-"}
+                    {inst.type}
                   </TableCell>
-                  <TableCell className="px-5 py-4 text-gray-600 dark:text-gray-400">
-                    {booking.class_details?.name || "-"}
+                  <TableCell className="px-5 py-4 text-gray-600 dark:text-gray-400 hidden">
+                    {inst.email}
                   </TableCell>
-                  <TableCell className="px-5 py-4 text-gray-600 dark:text-gray-400">
-                    {booking.booking_time
-                      ? dayjs(booking.booking_time).format("YYYY-MM-DD HH:mm")
-                      : "-"}
+                  <TableCell className="px-5 py-4 text-gray-600 dark:text-gray-400 hidden">
+                    {inst.phone}
                   </TableCell>
-                  <TableCell className="px-5 py-4 text-gray-600 dark:text-gray-400">
-                    {booking.status || "-"}
+                  <TableCell className="px-5 py-4 text-gray-600 dark:text-gray-400 ">
+                    {inst.is_active ? "مفعل" : "غير مفعل"}
                   </TableCell>
                   <TableCell className="px-5 py-4 text-center">
                     <div className="flex flex-col sm:flex-row justify-center gap-2">
@@ -162,19 +168,14 @@ export default function AcadimicBookingsTable() {
                         className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-lg"
                         onClick={() => {
                           onOpenUp();
-                          SetTempCat({
-                            ...booking,
-                            id: booking.id ?? booking.booking_id,
-                          });
+                          setTempInstitution(inst);
                         }}
                       >
                         تعديل
                       </Button>
                       <Button
                         className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg"
-                        onClick={() =>
-                          handleDelete(booking.id ?? booking.booking_id)
-                        }
+                        onClick={() => handleDelete(inst.id)}
                       >
                         حذف
                       </Button>
@@ -188,7 +189,7 @@ export default function AcadimicBookingsTable() {
 
         {/* 📑 الصفحات */}
         <div className="p-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
-          <Paginator page={page} SetPage={SetPage} total={total} />
+          <Paginator page={page} SetPage={setPage} total={total} />
         </div>
       </div>
 
@@ -199,9 +200,14 @@ export default function AcadimicBookingsTable() {
         onClose={onCloseUp}
       >
         <h1 className="flex justify-center p-3 text-2xl font-semibold text-gray-700 dark:text-gray-200">
-          تعديل الحجز
+          تعديل المؤسسة
         </h1>
-        <UpdateacademicBookingForm onCloseUp={onCloseUp} tempCat={tempCat} />
+        {tempInstitution && (
+          <UpdateInstitutionForm
+            onCloseUp={onCloseUp}
+            tempInstitution={tempInstitution}
+          />
+        )}
       </Modal>
     </>
   );

@@ -33,6 +33,7 @@ import productsApi from "./features/products/productsSlice";
 import { roleApi } from "./features/roles/roles";
 import { adminsApi } from "./features/Admins/AdminsSlice";
 import { PermissionsApi } from "./features/permissions/permissions";
+import { institutionApi } from "./features/institution/institutionApi";
 
 const persistConfig = {
   key: "auth",
@@ -49,6 +50,7 @@ export const store = configureStore({
     auth: persistedAuthReducer, // use persisted version
     [authApi.reducerPath]: authApi.reducer,
     [productsApi.reducerPath]: productsApi.reducer,
+    [institutionApi.reducerPath]: institutionApi.reducer,
     [EduSystemsApi.reducerPath]: EduSystemsApi.reducer,
     [AcademicStagesApi.reducerPath]: AcademicStagesApi.reducer,
     [AcademicYearsApi.reducerPath]: AcademicYearsApi.reducer,
@@ -76,6 +78,7 @@ export const store = configureStore({
     }).concat(
       authApi.middleware,
       productsApi.middleware,
+      institutionApi.middleware,
       EduSystemsApi.middleware,
       AcademicStagesApi.middleware,
       AcademicYearsApi.middleware,

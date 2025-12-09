@@ -39,6 +39,7 @@ const AppSidebar: React.FC = () => {
     { name: t("المعلمين"), path: "/academic-teatcher", icon: <UserCircleIcon /> },
     { name: t("الحجوزات"), path: "/academic-booking", icon: <CalenderIcon /> },
     { name: t("المنتجات"), path: "/products", icon: <PageIcon /> },
+    { name: t("الجامعات والمدارس"), path: "/institution", icon: <PageIcon /> },
     { name: t("الاخبار"), path: "/news", icon: <PageIcon /> },
     { name: t("الشكاوى"), path: "/complaints", icon: <PlugInIcon /> },
     { name: t("الاستفسارات"), path: "/inquiries", icon: <PlugInIcon /> },

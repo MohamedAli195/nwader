@@ -53,7 +53,7 @@ export default function UpdateProductForm({ tempProduct, onCloseUp }: IProps) {
     const formData = new FormData();
 
     formData.append("id", String(tempProduct?.id));
-    formData.append("_method", "PUT"); // مهم جدًا للارافيل
+    
 
     formData.append("name", data.name);
     formData.append("description", data.description);
