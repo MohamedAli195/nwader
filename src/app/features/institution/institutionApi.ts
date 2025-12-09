@@ -77,6 +77,7 @@ export const institutionApi = createApi({
          headers.set("Authorization", `Bearer ${token}`);
          // Do not manually set Content-Type for FormData
        }
+    
        headers.set("Accept", "application/json");
  
        return headers;
