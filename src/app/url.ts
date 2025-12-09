@@ -1,3 +1,3 @@
-const Base_URL ='https://3a3d946a5c3e.ngrok-free.app/api/admin/';
+const Base_URL ='https://e30c31d4245e.ngrok-free.app/api/admin/';
 
 export default Base_URL;
