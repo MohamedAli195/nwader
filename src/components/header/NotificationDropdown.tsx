@@ -1,27 +1,27 @@
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router";
 import { Dropdown } from "../ui/dropdown/Dropdown";
-import { DropdownItem } from "../ui/dropdown/DropdownItem";
-import {
-  useGetNotificationsQuery,
-  useMarkAllAsReadMutation,
-  useMarkAsReadMutation,
-} from "../../app/features/notifications/notifications";
+// import { DropdownItem } from "../ui/dropdown/DropdownItem";
+// import {
+//   // useGetNotificationsQuery,
+//   // useMarkAllAsReadMutation,
+//   useMarkAsReadMutation,
+// } from "../../app/features/notifications/notifications";
 // import toast from "react-hot-toast";
 export default function NotificationDropdown() {
   const [isOpen, setIsOpen] = useState(false);
-  const { data, refetch } = useGetNotificationsQuery(undefined, {
-    pollingInterval: 5000, // جلب البيانات تلقائيًا كل 5 ثواني
-  });
-  const notifications = data?.data || [];
+  // const { data, refetch } = useGetNotificationsQuery(undefined, {
+  //   pollingInterval: 5000, // جلب البيانات تلقائيًا كل 5 ثواني
+  // });
+  // const notifications = data?.data || [];
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const [markAllAsRead] = useMarkAllAsReadMutation();
-  const [markAsRead] = useMarkAsReadMutation();
+  // const [markAllAsRead] = useMarkAllAsReadMutation();
+  // const [markAsRead] = useMarkAsReadMutation();
 
   // حساب عدد الإشعارات غير المقروءة مباشرة من البيانات
-  const unreadCount = data?.data.filter((n) => !n.read_at).length || 0;
-  const notifying = unreadCount > 0;
+  // const unreadCount = data?.data.filter((n) => !n.read_at).length || 0;
+  // const notifying = unreadCount > 0;
 
   // عرض التوست لكل إشعار جديد
   // useEffect(() => {
@@ -60,16 +60,16 @@ export default function NotificationDropdown() {
     setIsOpen((prev) => !prev);
   };
 
-  const handleItemClick = async (id: string) => {
-    await markAsRead(id);
-    refetch(); // تحديث القائمة بعد جعل الإشعار مقروء
-    setIsOpen(false);
-  };
+  // const handleItemClick = async (id: string) => {
+  //   await markAsRead(id);
+  //  // refetch(); // تحديث القائمة بعد جعل الإشعار مقروء
+  //   setIsOpen(false);
+  // };
 
-  const handleMarkAllAsRead = async () => {
-    await markAllAsRead();
-    refetch();
-  };
+  // const handleMarkAllAsRead = async () => {
+  //   await markAllAsRead();
+  // //  refetch();
+  // };
 
   return (
     <div className="relative" ref={dropdownRef}>
@@ -78,11 +78,11 @@ export default function NotificationDropdown() {
         onClick={handleButtonClick}
       >
         {/* التنبيه */}
-        {notifying && (
-          <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-orange-400 text-xs font-semibold text-white">
-            {unreadCount}
-          </span>
-        )}
+        {/* {notifying && ( */}
+          {/*  <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-orange-400 text-xs font-semibold text-white"> */}
+            {/* {unreadCount} */}
+          {/* </span> */}
+        {/* )} */}
 
         {/* أيقونة الجرس */}
         <svg
@@ -109,14 +109,14 @@ export default function NotificationDropdown() {
           <h5 className="text-lg font-semibold text-gray-800">Notification</h5>
 
           <div className="flex items-center gap-3">
-            {notifications.length > 0 && (
-              <button
+            {/* {notifications.length > 0 && ( */}
+              {/* <button
                 onClick={handleMarkAllAsRead}
                 className="text-sm font-medium text-blue-600 hover:text-blue-800"
               >
                 Mark all as read
-              </button>
-            )}
+              </button> */}
+            {/* )} */}
             <button
               onClick={() => setIsOpen(false)}
               className="text-gray-500 hover:text-gray-700"
@@ -127,26 +127,26 @@ export default function NotificationDropdown() {
         </div>
 
         <ul className="flex flex-col h-auto overflow-y-auto custom-scrollbar">
-          {data?.data.map((n) => (
-            <li key={n.id}>
+          {/* {data?.data.map((n) => ( */}
+            {/* <li key={n.id}>
               <DropdownItem
                 onItemClick={() => handleItemClick(n.id)}
                 className={`flex gap-3 items-center rounded-lg border-b border-gray-100 p-3 hover:bg-gray-100 ${
                   !n.read_at ? "bg-orange-50" : "bg-white"
                 }`}
                 to={"/"}
-                // to={n.data.action_url || "/"}
-              >
-                {!n.read_at && (
+               
+              > */}
+                {/* {!n.read_at && (
                   <span className="inline-block h-2 w-2 rounded-full bg-orange-400"></span>
-                )}
+                )} */}
                 {/* <span className="flex-1 text-gray-700">{n.data.message}</span> */}
-                <span className="text-gray-400 text-xs">
+                {/* <span className="text-gray-400 text-xs">
                   {new Date(n.created_at).toLocaleTimeString()}
                 </span>
-              </DropdownItem>
-            </li>
-          ))}
+              </DropdownItem> */}
+            {/* </li> */}
+          {/* ))} */}
         </ul>
 
         <Link
