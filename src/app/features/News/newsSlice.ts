@@ -5,13 +5,16 @@ import Base_URL from "../../url";
 export interface IFormInputNews {
   title: string;
   content: string;
+  is_published: boolean;
   image: FileList;
 }
 
 export interface INews {
   id?: number | undefined;
   title: string;
+  
   content: string;
+  is_published: boolean;
   image: string;
   image_url?: string;
 }

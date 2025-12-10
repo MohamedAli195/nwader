@@ -87,5 +87,27 @@
   "Home":"عربي",
   "ReCountOneProduct": "جرد منتج واحد",
   "RecountAllProducts": "جرد جميع المنتجات",
-  "supplierAccount": "كشف حساب مورد"
+  "supplierAccount": "كشف حساب مورد",
+
+
+  "TOTAL PRODUCTS": "إجمالي المنتجات",
+  "TOTAL STUDENTS": "إجمالي الطلاب",
+  "TOTAL INSTITUTIONS": "إجمالي المؤسسات",
+  "TOTAL UNIVERSITIES": "إجمالي الجامعات",
+  "TOTAL SCHOOLS": "إجمالي المدارس",
+  "TOTAL NEWS": "إجمالي الأخبار",
+  "TOTAL QR SCANS": "إجمالي مسح رمز",
+  "ACTIVE PRODUCTS": "المنتجات النشطة",
+  "ACTIVE STUDENTS": "الطلاب النشطون",
+
+  "Products": "المنتجات",
+  "addButton": "إضافة منتج",
+  "product Name": "اسم المنتج",
+  "Description": "الوصف",
+  "Price": "السعر",
+  "Product Link": "رابط المنتج",
+  "Image": "الصورة",
+  "Actions": "الإجراءات",
+  "search": "ابحث  ..."
+  
 }

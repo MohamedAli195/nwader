@@ -101,6 +101,12 @@ export default function NewsTable() {
                   isHeader
                   className="px-5 py-3 font-semibold text-purple-700 text-start"
                 >
+                  الحالة
+                </TableCell>
+                <TableCell
+                  isHeader
+                  className="px-5 py-3 font-semibold text-purple-700 text-start"
+                >
                   الصورة
                 </TableCell>
                 <TableCell
@@ -120,17 +126,20 @@ export default function NewsTable() {
                   <TableCell className="px-5 py-4 text-gray-600">
                     {newItem.content}
                   </TableCell>
+                  <TableCell className="px-5 py-4 text-gray-600">
+                    {newItem.is_published ? "نشط" : "غير نشط"}
+                  </TableCell>
                   <TableCell className="px-5 py-4">
-              
-                       <img
-          src={
-            newItem.image?.length
-              ? newItem.image[0]
-              : `https://ui-avatars.com/api/?name=${newItem.title}&background=8b5cf6&color=fff`
-          }
-          alt={newItem.title}
-          className="h-16 w-16 object-cover rounded-lg border mx-auto"
-        />
+
+                    <img
+                      src={
+                        newItem.image?.length
+                          ? newItem.image
+                          : `https://ui-avatars.com/api/?name=${newItem.title}&background=8b5cf6&color=fff`
+                      }
+                      alt={newItem.title}
+                      className="h-16 w-16 object-cover rounded-lg border mx-auto"
+                    />
                   </TableCell>
                   <TableCell className="px-5 py-4 text-center">
                     <div className="flex flex-col sm:flex-row justify-center gap-2">
@@ -170,9 +179,10 @@ export default function NewsTable() {
             >
               <h2 className="font-semibold text-purple-700">{newItem.title}</h2>
               <p className="text-gray-600 text-sm">{newItem.content}</p>
+              <p className="text-gray-600 text-sm">{newItem.is_published ? "نشط" : "غير نشط"}</p>
               <img
                 src={
-                  newItem.image_url ||
+                  newItem.image ||
                   `https://ui-avatars.com/api/?name=${newItem.title}&background=8b5cf6&color=fff`
                 }
                 alt={newItem.title}

@@ -1,137 +1,128 @@
 import { useForm, SubmitHandler } from "react-hook-form";
-
 import { useEffect } from "react";
 import Swal from "sweetalert2";
-import Input from "../../../../components/form/input/InputField";
 import Button from "../../../../components/ui/button/Button";
-import {
-  IStudents,
-  useUpdateAcademicStudentsMutation,
-} from "../../../../app/features/academicStudent/academicStudentApi";
-export interface IFormInputEduSys {
-  name: string;
-  phone: string;
-  // password: string;
-}
+import { IStudents as student, useUpdateAcademicStudentsMutation } from "../../../../app/features/academicStudent/academicStudentApi";
 
 interface IProps {
-  tempCat: IStudents | undefined;
+  tempCat: student | undefined;
   onCloseUp: () => void;
 }
-interface errorType {
-  data: {
-    errors: {
-      name: string[];
-      message: string;
-    };
-  };
-  status: number;
+export interface IStudents {
+  id?: number;
+  first_name: string;
+  last_name: string;
+  username: string;
+  email: string;
+  date_of_birth: string;
+  student_id: string;
+  institution_id: string;
+  bio: string;
+  profile_image: File | null;
+  phone: string;
+  registered_at: string;
+  is_active: boolean; // <-- تم التعديل هنا
+  password?: string;
 }
-export default function UpdateacademicStudentsForm({
-  tempCat,
-  onCloseUp,
-}: IProps) {
-  const [updateAcademicStudents, { isLoading }] =
-    useUpdateAcademicStudentsMutation();
+export default function UpdateAcademicStudentForm({ tempCat, onCloseUp }: IProps) {
+  const [updateAcademicStudents, { isLoading }] = useUpdateAcademicStudentsMutation();
 
   const {
     register,
     handleSubmit,
     setValue,
     formState: { errors },
-  } = useForm<IFormInputEduSys>();
+  } = useForm<IStudents>({
+    defaultValues: {
+      profile_image: null,
+      is_active: true,
+    },
+  });
 
-  // Effect to populate form values if tempCat is available
-  // في useEffect
+  // Populate form values when tempCat is available
   useEffect(() => {
     if (tempCat) {
-      setValue("name", tempCat.name);
-      setValue("phone", tempCat.phone);
-      // setValue("password", tempCat.password ?? "");
+      Object.entries(tempCat).forEach(([key, value]) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        setValue(key as keyof IStudents, value as any);
+      });
     }
   }, [tempCat, setValue]);
 
-  // Form submission handler
-  const onSubmit: SubmitHandler<IFormInputEduSys> = async (data) => {
-    // Create FormData object
-    const formData = new FormData();
-    formData.append("name", data.name);
-    formData.append("phone", data.phone);
-    // formData.append("password", data.password);
-
-    // Call the mutation with the updated data
-
+  const onSubmit: SubmitHandler<IStudents> = async (formDataObj) => {
     try {
-      await updateAcademicStudents({
-        id: Number(tempCat?.id),
-        body: {
-          name: data.name,
-          phone: data.phone,
-          // password: data.password,
-        },
-      }).unwrap();
-      Swal.fire("Success", "تم التعديل بنجاح", "success");
-      onCloseUp();
-    } catch (error: unknown) {
-      console.log(error);
-      const err = error as errorType;
+      const formData = new FormData();
 
-      Swal.fire(
-        "Error",
-        err?.data?.errors?.name
-          ? err.data.errors.name.join("\n")
-          : "Something went wrong",
-        "error"
-      );
+      // تحويل is_active من boolean إلى 0 أو 1
+      const payload = {
+        ...formDataObj,
+        is_active: formDataObj.is_active ? 1 : 0,
+      };
+
+      Object.entries(payload).forEach(([key, value]) => {
+        if (key === "profile_image" && value instanceof File) {
+          formData.append("profile_image", value);
+        } else if (value !== undefined && value !== null) {
+          formData.append(key, value.toString());
+        }
+      });
+
+      await updateAcademicStudents({ id: Number(tempCat?.id), body: formData }).unwrap();
+      Swal.fire("تم", "تم تعديل الطالب بنجاح", "success");
+      onCloseUp();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
+      Swal.fire("خطأ", err?.data?.message || "حدث خطأ ما", "error");
     }
-    onCloseUp();
   };
 
   return (
-    <form
-      className="flex justify-center  flex-col my-12 gap-2 p-5 w-full "
-      onSubmit={handleSubmit(onSubmit)}
-    >
-      {/* Name inputs for different languages */}
-
+    <form className="flex flex-col gap-3 p-5" onSubmit={handleSubmit(onSubmit)}>
+      <InputField label="الاسم الأول" {...register("first_name", { required: "حقل الاسم الأول مطلوب" })} error={errors.first_name?.message} />
+      <InputField label="الاسم الأخير" {...register("last_name", { required: "حقل الاسم الأخير مطلوب" })} error={errors.last_name?.message} />
+      <InputField label="اسم المستخدم" {...register("username", { required: "حقل اسم المستخدم مطلوب" })} error={errors.username?.message} />
+      <InputField label="البريد الإلكتروني" type="email" {...register("email", { required: "حقل البريد مطلوب" })} error={errors.email?.message} />
+      <InputField label="رقم الهاتف" {...register("phone", { required: "حقل الهاتف مطلوب" })} error={errors.phone?.message} />
+      <InputField label="كلمة المرور" type="password" {...register("password")} error={errors.password?.message} />
+      <InputField label="تاريخ الميلاد" type="date" {...register("date_of_birth", { required: "حقل تاريخ الميلاد مطلوب" })} error={errors.date_of_birth?.message} />
+      <InputField label="رقم الطالب" {...register("student_id", { required: "حقل رقم الطالب مطلوب" })} error={errors.student_id?.message} />
+      <InputField label="معرف المؤسسة" {...register("institution_id", { required: "حقل المؤسسة مطلوب" })} error={errors.institution_id?.message} />
       <div>
-        <label htmlFor="">اسم المرحلة الدراسية</label>
-        <Input
-          type="text"
-          {...register("name", { required: "حقل الاسم مطلوب" })}
-        />
-        {errors.name && (
-          <p className="text-red-500 text-sm">{errors.name.message}</p>
-        )}
+        <label>نبذة عن الطالب</label>
+        <textarea {...register("bio")} className="border p-2 rounded w-full" />
+      </div>
+      <InputField label="تاريخ التسجيل" type="date" {...register("registered_at", { required: "حقل تاريخ التسجيل مطلوب" })} error={errors.registered_at?.message} />
+      
+      <div className="flex items-center gap-2">
+        <input type="checkbox" {...register("is_active")} />
+        <label>مفعل</label>
       </div>
 
       <div>
-        <label htmlFor="">الهاتف</label>
-        <Input
-          type="text"
-          {...register("phone", { required: "حقل الهاتف مطلوب" })}
+        <label>صورة الملف الشخصي</label>
+        <input
+          type="file"
+          accept="image/*"
+          onChange={(e) =>
+            setValue("profile_image", e.target.files ? e.target.files[0] : null)
+          }
         />
-        {errors.phone && (
-          <p className="text-red-500 text-sm">{errors.phone.message}</p>
-        )}
       </div>
-      {/* <div>
-        <label htmlFor="">الباسورد</label>
-        <Input
-          type="text"
-          {...register("password", { required: "حقل الباسورد مطلوب" })}
-        />
-        {errors.password && (
-          <p className="text-red-500 text-sm">{errors.password.message}</p>
-        )}
-      </div> */}
 
-      {/* Submit button */}
-      <div>
-        <Button className="w-full text-3xl" disabled={isLoading}>
-          {isLoading ? "انتظر..." : "تحديث"}
-        </Button>
-      </div>
+      <Button className="w-full mt-3" disabled={isLoading}>
+        {isLoading ? "انتظر..." : "تحديث الطالب"}
+      </Button>
     </form>
+  );
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function InputField({ label, error, ...props }: any) {
+  return (
+    <div>
+      <label>{label}</label>
+      <input {...props} className="border p-2 rounded w-full" />
+      {error && <p className="text-red-500 text-sm">{error}</p>}
+    </div>
   );
 }

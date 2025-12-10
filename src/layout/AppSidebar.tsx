@@ -2,20 +2,18 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router";
 import { useTranslation } from "react-i18next";
 import {
-  BoxCubeIcon,
-  CalenderIcon,
+
   ChevronDownIcon,
-  GridIcon,
-  ListIcon,
+
   PageIcon,
-  PieChartIcon,
-  PlugInIcon,
-  TableIcon,
+
   UserCircleIcon,
   HorizontaLDots,
 } from "../icons";
 import { useSidebar } from "../context/SidebarContext";
 import SidebarWidget from "../components/WedgetSidbar";
+import { UserSearchIcon } from "lucide-react";
+
 
 
 type NavItem = {
@@ -26,26 +24,26 @@ type NavItem = {
 };
 
 const AppSidebar: React.FC = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+const isRTL = i18n.language === "ar";
   const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useSidebar();
   const location = useLocation();
 
   const mainItems: NavItem[] = [
-    { name: t("النظام التعليمي"), path: "/educational-systems", icon: <GridIcon /> },
-    { name: t("المرحلة التعليمية"), path: "/academic-stages", icon: <ListIcon /> },
-    { name: t("الصفوف الدراسية"), path: "/academic-years", icon: <TableIcon /> },
-    { name: t("المواد"), path: "/academic-classes", icon: <BoxCubeIcon /> },
+
+    { name: t("استعلام عن الطلاب"), path: "/StudentQrLookup", icon: <UserSearchIcon /> },
     { name: t("الطلاب"), path: "/academic-students", icon: <UserCircleIcon /> },
-    { name: t("المعلمين"), path: "/academic-teatcher", icon: <UserCircleIcon /> },
-    { name: t("الحجوزات"), path: "/academic-booking", icon: <CalenderIcon /> },
+
     { name: t("المنتجات"), path: "/products", icon: <PageIcon /> },
     { name: t("الجامعات والمدارس"), path: "/institution", icon: <PageIcon /> },
     { name: t("الاخبار"), path: "/news", icon: <PageIcon /> },
-    { name: t("الشكاوى"), path: "/complaints", icon: <PlugInIcon /> },
-    { name: t("الاستفسارات"), path: "/inquiries", icon: <PlugInIcon /> },
-    { name: t("الخصومات"), path: "/tuition-discount", icon: <PieChartIcon /> },
-    { name: t("المدارس"), path: "/schools", icon: <BoxCubeIcon /> },
-    { name: t("المعلومات التعليمية"), path: "/educational-informations", icon: <TableIcon /> },
+    { name: t("عددالطلاب فى الجامعات والمدارس"), path: "/StudentsPerInstitutionReport", icon: <PageIcon /> },
+    { name: t("عدد الطلاب لكل نوع"), path: "/StudentsByInstitutionTypeReport", icon: <PageIcon /> },
+    { name: t("تفاصيل عن الاسكان"), path: "/QRScanStatistics", icon: <PageIcon /> },
+    { name: t("عن الجامعات والمدارس تفصيلى"), path: "/InstitutionDetailsCard", icon: <PageIcon /> },
+    // { name: t("الشكاوى"), path: "/complaints", icon: <PlugInIcon /> },
+    // { name: t("الاستفسارات"), path: "/inquiries", icon: <PlugInIcon /> },
+
   ];
 
   const othersItems: NavItem[] = [
@@ -172,20 +170,19 @@ const AppSidebar: React.FC = () => {
   );
 
   return (
-    <aside
-      className={`fixed mt-16 flex flex-col lg:mt-0 top-0 px-5 left-0 bg-white dark:bg-gray-900 dark:border-gray-800 text-gray-900 h-screen transition-all duration-300 ease-in-out z-50 border-r border-gray-200 
-        ${
-          isExpanded || isMobileOpen
-            ? "w-[290px]"
-            : isHovered
-            ? "w-[290px]"
-            : "w-[90px]"
-        }
-        ${isMobileOpen ? "translate-x-0" : "-translate-x-full"}
-        lg:translate-x-0`}
-      onMouseEnter={() => !isExpanded && setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
+  <aside
+  className={`fixed mt-16 flex flex-col lg:mt-0 top-0 px-5 
+    bg-white dark:bg-gray-900 dark:border-gray-800 text-gray-900 
+    h-screen transition-all duration-300 ease-in-out z-50 border-r border-gray-200
+    ${isExpanded || isMobileOpen ? "w-[290px]" : isHovered ? "w-[290px]" : "w-[90px]"}
+    ${isMobileOpen ? "translate-x-0" : "-translate-x-full"}
+    lg:translate-x-0
+    ${isRTL ? "right-0 left-auto" : "left-0 right-auto"}
+  `}
+  onMouseEnter={() => !isExpanded && setIsHovered(true)}
+  onMouseLeave={() => setIsHovered(false)}
+>
+
       <div
         className={`py-8 flex ${
           !isExpanded && !isHovered ? "lg:justify-center" : "justify-start"
