@@ -47,7 +47,7 @@ export default function UpdateRole({
 
   const onSubmit: SubmitHandler<IRoleFormInput> = async (data) => {
     const formData = new FormData();
-    // formData.append("_method", "PUT"); // لو Laravel
+    // formData.append("_method", "PUT"); 
     formData.append("name", data.name);
 
     data.permissions.forEach((p, index) =>
