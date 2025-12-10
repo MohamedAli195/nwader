@@ -4,6 +4,7 @@ import { errorType } from "../../../../types";
 import Input from "../../../../components/form/input/InputField";
 import Button from "../../../../components/ui/button/Button";
 import { useCreateProductMutation } from "../../../../app/features/products/productsSlice";
+import { t } from "i18next";
 
 
 export interface IFormInputProduct {
@@ -63,7 +64,7 @@ export default function AddProduct({ onClose }: { onClose: () => void }) {
     >
       {/* الاسم */}
       <div>
-        <label>اسم المنتج</label>
+        <label>{t("product Name")}</label>
         <Input
           type="text"
           {...register("name", { required: "اسم المنتج مطلوب" })}
@@ -75,13 +76,13 @@ export default function AddProduct({ onClose }: { onClose: () => void }) {
 
       {/* الوصف */}
       <div>
-        <label>الوصف</label>
+        <label>{t("Description")}</label>
         <Input type="text" {...register("description")} />
       </div>
 
       {/* السعر */}
       <div>
-        <label>السعر</label>
+        <label>{t("Price")}</label>
         <Input
           type="number"
           step="0.01"
@@ -94,7 +95,7 @@ export default function AddProduct({ onClose }: { onClose: () => void }) {
 
       {/* رابط المتجر */}
       <div>
-        <label>رابط المنتج في المتجر</label>
+        <label>{t("Product Link")}</label>
         <Input
           type="text"
           {...register("store_link", { required: "رابط المتجر مطلوب" })}
@@ -106,13 +107,13 @@ export default function AddProduct({ onClose }: { onClose: () => void }) {
 
       {/* الحالة */}
       <div className="flex items-center gap-2">
-        <label>نشط؟</label>
+        <label>{t("status")}</label>
         <input type="checkbox" {...register("is_active")} />
       </div>
 
       {/* الصور */}
       <div>
-        <label>صور المنتج</label>
+        <label>{t("Image")}</label>
         <Input
           type="file"
           accept="image/*"
@@ -123,7 +124,7 @@ export default function AddProduct({ onClose }: { onClose: () => void }) {
 
       <div>
         <Button className="w-full text-3xl" disabled={isLoading}>
-          {isLoading ? "جاري الإضافة..." : "إضافة منتج"}
+          {isLoading ? "جاري الإضافة..." : t("addButton")}
         </Button>
       </div>
     </form>

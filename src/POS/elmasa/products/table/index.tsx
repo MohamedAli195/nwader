@@ -153,7 +153,7 @@ const { t } = useTranslation();
                       rel="noopener noreferrer"
                       className="hover:text-blue-700"
                     >
-                      رابط المنتج
+                      {t("Product Link")}
                     </Link>
                   </TableCell>
 
@@ -179,14 +179,14 @@ const { t } = useTranslation();
                           onOpenUp();
                         }}
                       >
-                        تعديل
+                        {t("Edit")}
                       </Button>
 
                       <Button
                         className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-xl shadow-md"
                         onClick={() => handleDelete(product.id)}
                       >
-                        حذف
+                          {t("Delete")}
                       </Button>
 
                     </div>

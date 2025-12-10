@@ -105,7 +105,11 @@
   "Price": "Price",
   "Product Link": "Product Link",
   "Image": "Image",
+  "status": "Status",
+  "addProd": "Add Product",
   "Actions": "Actions",
    "search": "Search ...",
+    "Delete" : "Delete",
+  "Edit" : "Edit"
    "roles": "Roles"
 }
