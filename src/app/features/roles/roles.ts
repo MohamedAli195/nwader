@@ -38,7 +38,9 @@ export const roleApi = createApi({
       if (token) {
         headers.set("Authorization", `Bearer ${token}`);
       }
-      headers.set("Accept", "application/json");
+        headers.set("Accept", "application/json");
+        // Accept: "application/json",
+
       return headers;
     },
   }),
@@ -75,7 +77,7 @@ getRoles: builder.query<IRolesListResponse, number | void>({
     >({
       query: ({ id, formData }) => ({
         url: `/roles/${id}`,
-        method: "PUT",
+        method: "POST",
         body: formData,
       }),
       invalidatesTags: ["roles"],
