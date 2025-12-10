@@ -93,28 +93,25 @@ export default function AcadimicStudentsTable() {
           <Table>
             <TableHeader>
               <TableRow className="bg-gray-50 dark:bg-gray-800">
-                <TableCell
-                  isHeader
-                  className="px-5 py-3 font-semibold text-purple-700 text-start"
-                >
-                  اسم الطالب
+                <TableCell isHeader className="px-5 py-3 font-semibold text-purple-700 text-start">
+                  الاسم الكامل
                 </TableCell>
-                <TableCell
-                  isHeader
-                  className="px-5 py-3 font-semibold text-purple-700 text-start"
-                >
+                <TableCell isHeader className="px-5 py-3 font-semibold text-purple-700 text-start">
                   رقم الهاتف
                 </TableCell>
-                <TableCell
-                  isHeader
-                  className="px-5 py-3 font-semibold text-purple-700 text-start"
-                >
+                <TableCell isHeader className="px-5 py-3 font-semibold text-purple-700 text-start">
+                  البريد الإلكتروني
+                </TableCell>
+                <TableCell isHeader className="px-5 py-3 font-semibold text-purple-700 text-start">
+                  تاريخ الميلاد
+                </TableCell>
+                <TableCell isHeader className="px-5 py-3 font-semibold text-purple-700 text-start">
+                  رقم الطالب
+                </TableCell>
+                <TableCell isHeader className="px-5 py-3 font-semibold text-purple-700 text-start">
                   تاريخ التسجيل
                 </TableCell>
-                <TableCell
-                  isHeader
-                  className="px-5 py-3 font-semibold text-purple-700 text-center text-sm dark:text-gray-300"
-                >
+                <TableCell isHeader className="px-5 py-3 font-semibold text-purple-700 text-center text-sm dark:text-gray-300">
                   الإجراءات
                 </TableCell>
               </TableRow>
@@ -127,10 +124,19 @@ export default function AcadimicStudentsTable() {
                   className="hover:bg-gray-50 dark:hover:bg-gray-800 transition"
                 >
                   <TableCell className="px-5 py-4 text-start text-gray-900 dark:text-gray-100 font-medium">
-                    {student.name}
+                    {student.first_name} {student.last_name}
                   </TableCell>
                   <TableCell className="px-5 py-4 text-gray-600 dark:text-gray-400 text-start">
                     {student.phone}
+                  </TableCell>
+                  <TableCell className="px-5 py-4 text-gray-600 dark:text-gray-400 text-start">
+                    {student.email}
+                  </TableCell>
+                  <TableCell className="px-5 py-4 text-gray-600 dark:text-gray-400 text-start">
+                    {student.date_of_birth}
+                  </TableCell>
+                  <TableCell className="px-5 py-4 text-gray-600 dark:text-gray-400 text-start">
+                    {student.student_id}
                   </TableCell>
                   <TableCell className="px-5 py-4 text-gray-600 dark:text-gray-400 text-start">
                     {student.registered_at}
@@ -168,10 +174,16 @@ export default function AcadimicStudentsTable() {
               className="rounded-lg border border-gray-200 p-4 dark:border-gray-700 dark:bg-gray-800 shadow-sm"
             >
               <p className="text-gray-900 dark:text-gray-100 font-semibold">
-                {student.name}
+                {student.first_name} {student.last_name}
               </p>
               <p className="text-gray-600 dark:text-gray-400 text-sm">
                 {student.phone}
+              </p>
+              <p className="text-gray-600 dark:text-gray-400 text-sm">
+                {student.email}
+              </p>
+              <p className="text-gray-500 dark:text-gray-400 text-xs">
+                {student.date_of_birth} | {student.student_id}
               </p>
               <p className="text-gray-500 dark:text-gray-400 text-xs">
                 {student.registered_at}

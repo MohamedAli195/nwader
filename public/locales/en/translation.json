@@ -86,5 +86,25 @@
   "pro": "Pro",
   "ReCountOneProduct": "ReCount One Product",
   "RecountAllProducts": "Recount All Products",
-  "supplierAccount": "Supplier Account"
+  "supplierAccount": "Supplier Account",
+
+
+  "TOTAL PRODUCTS": "TOTAL PRODUCTS",
+  "TOTAL STUDENTS": "TOTAL STUDENTS",
+  "TOTAL INSTITUTIONS": "TOTAL INSTITUTIONS",
+  "TOTAL UNIVERSITIES": "TOTAL UNIVERSITIES",
+  "TOTAL SCHOOLS": "TOTAL SCHOOLS",
+  "TOTAL NEWS": "TOTAL NEWS",
+  "TOTAL QR SCANS": "TOTAL QR SCANS",
+  "ACTIVE PRODUCTS": "ACTIVE PRODUCTS",
+  "ACTIVE STUDENTS": "ACTIVE STUDENTS",
+  "Products": "Products",
+  "addButton": "Add Button",
+  "product Name": "Product Name",
+  "Description": "Description",
+  "Price": "Price",
+  "Product Link": "Product Link",
+  "Image": "Image",
+  "Actions": "Actions",
+   "search": "Search ..."
 }

@@ -15,21 +15,17 @@ import Products from "../POS/elmasa/products/Products";
 import Roles from "../POS/elmasa/Roles/Roles";
 import AdminsPage from "../POS/elmasa/Admins/Admins";
 import Institution from "../POS/elmasa/Institution/Institution";
+import StudentQrLookup from "../POS/elmasa/StudentQrLookup/StudentQrLookup";
+import StudentsPerInstitutionReport from "../POS/elmasa/Reports/StudentsPerInstitutionReport";
+import StudentsByInstitutionTypeReport from "../POS/elmasa/Reports/StudentsByInstitutionTypeReport";
+import QRScanStatistics from "../POS/elmasa/Reports/QRScanStatistics";
+import InstitutionDetailsCard from "../POS/elmasa/Reports/InstitutionDetailsCard";
+import AcademicStudents from "../POS/elmasa/academicStudents/AcademicStudents";
 
-const TuitionDiscount = lazy(() => import("../POS/elmasa/TuitionDiscounts/TuitionDiscounts"));
 
-const Schools = lazy(() => import("../POS/elmasa/Schools/Schools"));
 
-const EdicationalInfo = lazy(() => import("../POS/elmasa/EducationalInfo/EdicationalInfo"));
-
-const EduSys = lazy(() => import("../POS/elmasa/SysEdu/EduSys"));
-const AcademicStages = lazy(() => import("../POS/elmasa/academicStages/AcademicStages"));
-const AcademicYears = lazy(() => import("../POS/elmasa/academicYears/AcademicStages"));
-const AcademicClasses = lazy(() => import("../POS/elmasa/academicClasses/AcademicClasses"));
-const AcademicStudents = lazy(() => import("../POS/elmasa/academicStudents/AcademicStudents"));
-const AcademicBooking = lazy(() => import("../POS/elmasa/academicBookings/AcademicBooking"));
 const News = lazy(() => import("../POS/elmasa/News/News"));
-const Teatchers = lazy(() => import("../POS/elmasa/Teachers/Teatchers"));
+
 
 const AppLayout = lazy(() => import("../layout/AppLayout"));
 // Lazy-loaded pages
@@ -114,74 +110,10 @@ const router = createBrowserRouter(
           }
         />
 
-        {/* Start Almasa */}
-        <Route
-          path="academic-years"
-          element={
-            <Suspense fallback={<Loading />}>
-              {" "}
-              <ProtectedRoute redirect="/signin">
-                <AcademicYears />
-              </ProtectedRoute>
-            </Suspense>
-          }
-        />
-        <Route
-          path="schools"
-          element={
-            <Suspense fallback={<Loading />}>
-              {" "}
-              <ProtectedRoute redirect="/signin">
-                <Schools />
-              </ProtectedRoute>
-            </Suspense>
-          }
-        />
-        <Route
-          path="tuition-discount"
-          element={
-            <Suspense fallback={<Loading />}>
-
-              <ProtectedRoute redirect="/signin">
-
-              <TuitionDiscount /> 
-              </ProtectedRoute > 
-            </Suspense>
-          }
-        />
-        <Route
-          path="educational-informations"
-          element={
-            <Suspense fallback={<Loading />}>
-              {" "}
-              <ProtectedRoute redirect="/signin">
-                <EdicationalInfo />
-              </ProtectedRoute>
-            </Suspense>
-          }
-        />
-        <Route
-          path="academic-classes"
-          element={
-            <Suspense fallback={<Loading />}>
-              {" "}
-              <ProtectedRoute redirect="/signin">
-                <AcademicClasses />
-              </ProtectedRoute>
-            </Suspense>
-          }
-        />
-        <Route
-          path="academic-students"
-          element={
-            <Suspense fallback={<Loading />}>
-              {" "}
-              <ProtectedRoute redirect="/signin">
-                <AcademicStudents />
-              </ProtectedRoute>
-            </Suspense>
-          }
-        />
+    
+    
+    
+    
          <Route
           path="complaints"
           element={
@@ -232,39 +164,7 @@ const router = createBrowserRouter(
         
 
 
-        <Route
-          path="academic-bookings"
-          element={
-            <Suspense fallback={<Loading />}>
-              {" "}
-              <ProtectedRoute redirect="/signin">
-                <AcademicBooking />
-              </ProtectedRoute>
-            </Suspense>
-          }
-        />
-        <Route
-          path="academic-teatcher"
-          element={
-            <Suspense fallback={<Loading />}>
-              {" "}
-              <ProtectedRoute redirect="/signin">
-                <Teatchers />
-              </ProtectedRoute>
-            </Suspense>
-          }
-        />
-        <Route
-          path="academic-booking"
-          element={
-            <Suspense fallback={<Loading />}>
-              {" "}
-              <ProtectedRoute redirect="/signin">
-                <AcademicBooking />
-              </ProtectedRoute>
-            </Suspense>
-          }
-        />
+   
         {/* End Almasa */}
         <Route
           path="blank"
@@ -359,16 +259,7 @@ const router = createBrowserRouter(
             </Suspense>
           }
         />
-        <Route
-          path="educational-systems"
-          element={
-            <Suspense fallback={<Loading />}>
-              <ProtectedRoute redirect="/signin">
-                <EduSys />
-              </ProtectedRoute>
-            </Suspense>
-          }
-        />
+    
         <Route
           path="news"
           element={
@@ -379,16 +270,7 @@ const router = createBrowserRouter(
             </Suspense>
           }
         />
-        <Route
-          path="academic-stages"
-          element={
-            <Suspense fallback={<Loading />}>
-              <ProtectedRoute redirect="/signin">
-                <AcademicStages />
-              </ProtectedRoute>
-            </Suspense>
-          }
-        />
+    
         <Route
           path="products"
           element={
@@ -410,15 +292,67 @@ const router = createBrowserRouter(
           }
         />
         <Route
-          path="teatchers"
+          path="StudentQrLookup"
           element={
             <Suspense fallback={<Loading />}>
               <ProtectedRoute redirect="/signin">
-                <Teatchers />
+                <StudentQrLookup />
               </ProtectedRoute>
             </Suspense>
           }
         />
+        <Route
+          path="StudentsPerInstitutionReport"
+          element={
+            <Suspense fallback={<Loading />}>
+              <ProtectedRoute redirect="/signin">
+                <StudentsPerInstitutionReport />
+              </ProtectedRoute>
+            </Suspense>
+          }
+        />
+        <Route
+          path="StudentsByInstitutionTypeReport"
+          element={
+            <Suspense fallback={<Loading />}>
+              <ProtectedRoute redirect="/signin">
+                <StudentsByInstitutionTypeReport />
+              </ProtectedRoute>
+            </Suspense>
+          }
+        />
+        <Route
+          path="QRScanStatistics"
+          element={
+            <Suspense fallback={<Loading />}>
+              <ProtectedRoute redirect="/signin">
+                <QRScanStatistics />
+              </ProtectedRoute>
+            </Suspense>
+          }
+        />
+        <Route
+          path="InstitutionDetailsCard"
+          element={
+            <Suspense fallback={<Loading />}>
+              <ProtectedRoute redirect="/signin">
+                <InstitutionDetailsCard />
+              </ProtectedRoute>
+            </Suspense>
+          }
+        />
+        <Route
+          path="academic-students"
+          element={
+            <Suspense fallback={<Loading />}>
+              <ProtectedRoute redirect="/signin">
+                <AcademicStudents />
+              </ProtectedRoute>
+            </Suspense>
+          }
+        />
+  
+
       </Route>
 
       {/* Public Routes */}

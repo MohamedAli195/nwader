@@ -7,6 +7,7 @@ import { useCreateNewMutation } from "../../../../app/features/News/newsSlice";
 export interface IFormInputNews {
   title: string;
   content: string;
+  is_published: boolean;
   image: FileList;
 }
 export default function AddNew({ onClose }: { onClose: () => void }) {
@@ -22,7 +23,8 @@ export default function AddNew({ onClose }: { onClose: () => void }) {
     const formData = new FormData();
     formData.append("title", data.title);
     formData.append("content", data.content || "");
-    // if (data.password) formData.append("password", data.password);
+    formData.append("is_published", data.is_published ? "1" : "0");
+
     if (data.image && data.image[0]) {
       formData.append("image", data.image[0]);
     }
@@ -63,6 +65,12 @@ export default function AddNew({ onClose }: { onClose: () => void }) {
       <div>
         <label> الوصف</label>
         <Input type="text" {...register("content")} />
+      </div>
+
+      {/* الحالة */}
+      <div className="flex items-center gap-2">
+        <label>نشط؟</label>
+        <input type="checkbox" {...register("is_published")} />
       </div>
 
       <div>
