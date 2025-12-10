@@ -112,8 +112,20 @@
   "Actions": "الإجراءات",
   "search": "ابحث  ...",
   "Delete" : "حذف",
-  "Edit" : "تعديل"
-   "roles": "الصلاحيات"
-
-  
+  "Edit" : "تعديل",
+  "roles": "الصلاحيات",
+  "Student inquiry": "استعلام عن الطالب",
+  "Students": "طلاب",
+  "institutions": "مؤسسات",
+  "News": "أخبار",
+  "Numberofstudents":"عدد الطلاب فى الجامعات والمدارس",
+  "Numberoftype":"عدد الطلاب لكل نوع",
+  "QRScanDetails":"تفاصيل عن الاستعلام",
+  "aboutuniversitiesandschools":"معلومات تفصيلية عن الجامعات والمدارس",
+  "Number of registered students per institution": "عدد الطلاب المسجلين في كل مؤسسة",
+  "name": "الاسم",
+  "email": "البريد الإلكتروني",
+  "phone": "رقم الهاتف",
+  "address": "العنوان",
+  "type": "النوع"
 }

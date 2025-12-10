@@ -110,6 +110,22 @@
   "Actions": "Actions",
    "search": "Search ...",
     "Delete" : "Delete",
-  "Edit" : "Edit"
-   "roles": "Roles"
+  "Edit" : "Edit",
+   "roles": "Roles",
+   "Student inquiry": "Student Inquiry",
+    
+  "Students": "Students",
+  "institutions": "Institutions",
+  "News": "News",
+
+  "Numberofstudents":"Number Of Students In Universities And Schools",
+  "Numberoftype":"Number Of Students By Type",
+  "QRScanDetails":"QR Scan Details",
+  "aboutuniversitiesandschools":"About Universities And Schools",
+  "Number of registered students per institution": "Number Of Segistered Students Per Institution",
+    "name": "Name",
+  "email": "Email",
+  "phone": "Phone",
+  "address": "Address",
+  "type": "Type"
 }

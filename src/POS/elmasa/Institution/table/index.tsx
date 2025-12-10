@@ -17,6 +17,7 @@ import {
   useGetInstitutionsQuery,
 } from "../../../../app/features/institution/institutionApi";
 import UpdateInstitutionForm from "../updateForm";
+import { t } from "i18next";
 interface ApiError {
   data?: {
     errors?: Record<string, string[]>;
@@ -106,13 +107,13 @@ export default function InstitutionsTable() {
                   isHeader
                   className="px-5 py-3 font-semibold text-purple-700 text-start"
                 >
-                  الاسم
+                  {t("name") || "الاسم"}
                 </TableCell>
                 <TableCell
                   isHeader
                   className="px-5 py-3 font-semibold text-purple-700 text-start"
                 >
-                  النوع
+                  {t("type") || "النوع"}
                 </TableCell>
                 <TableCell
                   isHeader
@@ -130,13 +131,13 @@ export default function InstitutionsTable() {
                   isHeader
                   className="px-5 py-3 font-semibold text-purple-700 text-start"
                 >
-                  الحالة
+                 {t("status") || "الحالة"}
                 </TableCell>
                 <TableCell
                   isHeader
                   className="px-5 py-3 font-semibold text-purple-700 text-center"
                 >
-                  الإجراءات
+                  {t("Actions") || "الإجراءات"}
                 </TableCell>
               </TableRow>
             </TableHeader>
@@ -171,13 +172,13 @@ export default function InstitutionsTable() {
                           setTempInstitution(inst);
                         }}
                       >
-                        تعديل
+                        {t("Edit") || "تعديل"}
                       </Button>
                       <Button
                         className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg"
                         onClick={() => handleDelete(inst.id)}
                       >
-                        حذف
+                        {t("Delete") || "حذف"}
                       </Button>
                     </div>
                   </TableCell>
