@@ -13,11 +13,13 @@ import Paginator from "../../../../components/ui/Pagination/Paginator";
 import { Modal } from "../../../../components/ui/modal";
 
 import {
-  IStudents,
+  IStudent,
   useDeleteAcademicStudentsMutation,
   useGetAcademicStudentsQuery,
 } from "../../../../app/features/academicStudent/academicStudentApi";
 import UpdateacademicStudentsForm from "../updateForm";
+// import { IStudents } from "../../../../app/features/academicStudentApi/academicStudentApi";
+
 
 export default function AcadimicStudentsTable() {
   const [page, SetPage] = useState(1);
@@ -29,11 +31,12 @@ export default function AcadimicStudentsTable() {
   });
 
   const [isOpenUp, SetIsOpenUp] = useState(false);
-  const [tempCat, SetTempCat] = useState<IStudents | undefined>();
+  const [tempCat, SetTempCat] = useState<IStudent | undefined>();
   const onCloseUp = () => SetIsOpenUp(false);
   const onOpenUp = () => SetIsOpenUp(true);
 
   const Students = data?.data ?? [];
+  console.log(Students)
   const total = data?.meta?.total ?? 0;
 
   const [deleteAcademicStudents] = useDeleteAcademicStudentsMutation();
@@ -94,7 +97,7 @@ export default function AcadimicStudentsTable() {
             <TableHeader>
               <TableRow className="bg-gray-50 dark:bg-gray-800">
                 <TableCell isHeader className="px-5 py-3 font-semibold text-purple-700 text-start">
-                  الاسم الكامل
+                  الاسم 
                 </TableCell>
                 <TableCell isHeader className="px-5 py-3 font-semibold text-purple-700 text-start">
                   رقم الهاتف
@@ -102,15 +105,14 @@ export default function AcadimicStudentsTable() {
                 <TableCell isHeader className="px-5 py-3 font-semibold text-purple-700 text-start">
                   البريد الإلكتروني
                 </TableCell>
+
                 <TableCell isHeader className="px-5 py-3 font-semibold text-purple-700 text-start">
-                  تاريخ الميلاد
+                qr_code
                 </TableCell>
-                <TableCell isHeader className="px-5 py-3 font-semibold text-purple-700 text-start">
-                  رقم الطالب
+                    <TableCell isHeader className="px-5 py-3 font-semibold text-purple-700 text-start">
+                اسم الجامعة
                 </TableCell>
-                <TableCell isHeader className="px-5 py-3 font-semibold text-purple-700 text-start">
-                  تاريخ التسجيل
-                </TableCell>
+
                 <TableCell isHeader className="px-5 py-3 font-semibold text-purple-700 text-center text-sm dark:text-gray-300">
                   الإجراءات
                 </TableCell>
@@ -124,7 +126,7 @@ export default function AcadimicStudentsTable() {
                   className="hover:bg-gray-50 dark:hover:bg-gray-800 transition"
                 >
                   <TableCell className="px-5 py-4 text-start text-gray-900 dark:text-gray-100 font-medium">
-                    {student.first_name} {student.last_name}
+                    {student.first_name} 
                   </TableCell>
                   <TableCell className="px-5 py-4 text-gray-600 dark:text-gray-400 text-start">
                     {student.phone}
@@ -132,15 +134,14 @@ export default function AcadimicStudentsTable() {
                   <TableCell className="px-5 py-4 text-gray-600 dark:text-gray-400 text-start">
                     {student.email}
                   </TableCell>
+
                   <TableCell className="px-5 py-4 text-gray-600 dark:text-gray-400 text-start">
-                    {student.date_of_birth}
+                    {student.qr_code}
                   </TableCell>
-                  <TableCell className="px-5 py-4 text-gray-600 dark:text-gray-400 text-start">
-                    {student.student_id}
+                   <TableCell className="px-5 py-4 text-gray-600 dark:text-gray-400 text-start">
+                    {student.institution?.name}
                   </TableCell>
-                  <TableCell className="px-5 py-4 text-gray-600 dark:text-gray-400 text-start">
-                    {student.registered_at}
-                  </TableCell>
+    
                   <TableCell className="px-5 py-4 text-center">
                     <div className="flex justify-center gap-2">
                       <Button
@@ -185,9 +186,7 @@ export default function AcadimicStudentsTable() {
               <p className="text-gray-500 dark:text-gray-400 text-xs">
                 {student.date_of_birth} | {student.student_id}
               </p>
-              <p className="text-gray-500 dark:text-gray-400 text-xs">
-                {student.registered_at}
-              </p>
+
               <div className="flex flex-col sm:flex-row gap-2 mt-3">
                 <Button
                   className="bg-blue-500 hover:bg-blue-600 text-white w-full sm:w-auto px-3 py-1 rounded-lg"

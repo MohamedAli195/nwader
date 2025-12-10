@@ -3,29 +3,32 @@ import Swal from "sweetalert2";
 // import Input from "../../../../components/form/input/InputField";
 import Button from "../../../../components/ui/button/Button";
 import { useCreateAcademicStudentsMutation } from "../../../../app/features/academicStudent/academicStudentApi";
+import { useGetInstitutionsQuery } from "../../../../app/features/institution/institutionApi";
+import { useState } from "react";
+import { Loader2 } from "lucide-react";
+import { IStudentsInputs } from "../updateForm";
 
-export interface IStudents {
-  id?: number;
-  first_name: string;
-  last_name: string;
-  username: string;
-  email: string;
-  date_of_birth: string;
-  student_id: string;
-  institution_id: string;
-  bio: string;
-  profile_image: File | null;
-  phone: string;
-  registered_at: string;
-  is_active: boolean; // <-- تم التعديل هنا
-  password?: string;
-}
+// export interface IStudents {
+  
+//   first_name: string;
+//   email: string;
+//   institution_id: string;
+//   phone: string;
+//   // is_active: boolean; 
+//   password?: string;
+//   password_confirmation?:string
+//   // student_id: string;
+//   // registered_at: string;
+// // id?: number;
+// }
 
 export default function AddAcademicStudent({
   onClose,
 }: {
   onClose: () => void;
 }) {
+   const { data:Institut, isLoading:isLoadingInstitutions } = useGetInstitutionsQuery();
+    const [selectedInstitutionId, setSelectedInstitutionId] = useState<number | null>(null);
   const [createAcademicStudents, { isLoading }] =
     useCreateAcademicStudentsMutation();
 
@@ -33,29 +36,22 @@ export default function AddAcademicStudent({
     register,
     handleSubmit,
     formState: { errors },
-    setValue,
-  } = useForm<IStudents>({
-    defaultValues: {
-      profile_image: null,
-      is_active: true,
-    },
-  });
+
+  } = useForm<IStudentsInputs>();
 
 
-const onSubmit: SubmitHandler<IStudents> = async (formDataObj) => {
+const onSubmit: SubmitHandler<IStudentsInputs> = async (formDataObj) => {
   try {
     const formData = new FormData();
 
     // تحويل is_active من boolean إلى 0 أو 1
     const payload = {
       ...formDataObj,
-      is_active: formDataObj.is_active ? 1 : 0,
+
     };
 
     Object.entries(payload).forEach(([key, value]) => {
-      if (key === "profile_image" && value instanceof File) {
-        formData.append("profile_image", value);
-      } else if (value !== undefined && value !== null) {
+        if (value !== undefined && value !== null) {
         formData.append(key, value.toString());
       }
     });
@@ -69,7 +65,14 @@ const onSubmit: SubmitHandler<IStudents> = async (formDataObj) => {
   }
 };
 
-
+  // معالجة تحميل قائمة المؤسسات
+  if (isLoadingInstitutions) {
+    return (
+      <div className="flex justify-center items-center h-40">
+        <Loader2 className="animate-spin w-8 h-8 text-purple-600" />
+      </div>
+    );
+  }
   return (
     <form className="flex flex-col gap-3 p-5" onSubmit={handleSubmit(onSubmit)}>
       <InputField
@@ -77,16 +80,8 @@ const onSubmit: SubmitHandler<IStudents> = async (formDataObj) => {
         {...register("first_name", { required: "حقل الاسم الأول مطلوب" })}
         error={errors.first_name?.message}
       />
-      <InputField
-        label="الاسم الأخير"
-        {...register("last_name", { required: "حقل الاسم الأخير مطلوب" })}
-        error={errors.last_name?.message}
-      />
-      <InputField
-        label="اسم المستخدم"
-        {...register("username", { required: "حقل اسم المستخدم مطلوب" })}
-        error={errors.username?.message}
-      />
+
+
       <InputField
         label="البريد الإلكتروني"
         type="email"
@@ -104,50 +99,37 @@ const onSubmit: SubmitHandler<IStudents> = async (formDataObj) => {
         {...register("password", { required: "حقل كلمة المرور مطلوب" })}
         error={errors.password?.message}
       />
-      <InputField
-        label="تاريخ الميلاد"
-        type="date"
-        {...register("date_of_birth", { required: "حقل تاريخ الميلاد مطلوب" })}
-        error={errors.date_of_birth?.message}
+       <InputField
+        label="تأكيد كلمة المرور"
+        type="password"
+        {...register("password_confirmation", { required: "حقل كلمة المرور مطلوب" })}
+        error={errors.password?.message}
       />
-      <InputField
-        label="رقم الطالب"
-        {...register("student_id", { required: "حقل رقم الطالب مطلوب" })}
-        error={errors.student_id?.message}
-      />
-      <InputField
-        label="معرف المؤسسة"
+
+
+
+      <div>
+        <label className="block text-gray-700 dark:text-gray-300 mb-2">اختر المؤسسة:</label>
+        <select
         {...register("institution_id", { required: "حقل المؤسسة مطلوب" })}
-        error={errors.institution_id?.message}
-      />
-      <div>
-        <label>نبذة عن الطالب</label>
-        <textarea {...register("bio")} className="border p-2 rounded w-full" />
+          className="w-full md:w-1/2 p-2 border rounded-lg dark:bg-gray-700 dark:text-white"
+          value={selectedInstitutionId || ""}
+          onChange={(e) => setSelectedInstitutionId(Number(e.target.value))}
+        >
+          <option value="">-- اختر مؤسسة --</option>
+          {Institut?.data.map((inst) => (
+            <option key={inst.id || "na"} value={inst.id || 0}>
+              {inst.name} ({inst.type})
+            </option>
+          ))}
+        </select>
       </div>
-      <div>
-        <label>تاريخ التسجيل</label>
-        <InputField
-          type="date"
-          {...register("registered_at", {
-            required: "حقل تاريخ التسجيل مطلوب",
-          })}
-          error={errors?.registered_at?.message}
-        />
-      </div>
-   <div className="flex items-center gap-2">
+
+   {/* <div className="flex items-center gap-2">
         <input type="checkbox" {...register("is_active")} defaultChecked />
         <label>مفعل</label>
-      </div>
-      <div>
-        <label>صورة الملف الشخصي</label>
-        <input
-          type="file"
-          accept="image/*"
-          onChange={(e) =>
-            setValue("profile_image", e.target.files ? e.target.files[0] : null)
-          }
-        />
-      </div>
+      </div> */}
+
       <Button className="w-full mt-3" disabled={isLoading}>
         {isLoading ? "انتظر..." : "اضافة طالب"}
       </Button>

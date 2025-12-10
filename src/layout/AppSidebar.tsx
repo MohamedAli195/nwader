@@ -31,8 +31,11 @@ const isRTL = i18n.language === "ar";
     { name: t("Student inquiry"), path: "/StudentQrLookup", icon: <UserSearchIcon /> },
     { name: t("Students"), path: "/academic-students", icon: <UserCircleIcon /> },
     { name: t("roles"), path: "/roles", icon: <UserCheck /> },
+    { name: t("users"), path: "/users", icon: <UserCheck /> },
+
 
     { name: t("Products"), path: "/products", icon: <GalleryHorizontalEnd /> },
+    
     { name: t("institutions"), path: "/institution", icon: <University /> },
     { name: t("News"), path: "/news", icon: <Newspaper /> },
     { name: t("Numberofstudents"), path: "/StudentsPerInstitutionReport", icon: <ChartArea /> },

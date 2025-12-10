@@ -8,21 +8,50 @@ export interface IFormInputEduSys {
   // password: string;
 }
 
-export interface IStudents {
-  id?: number | undefined;
-  name: string;
-  phone: string;
-  registered_at: string;
-  password?: string;
-}
+export interface IStudent {
+  id?: number;
+  first_name: string;
+  last_name?: string;
+  full_name?: string;
 
+  email: string;
+  phone: string;
+  username?: string;
+
+  institution_id: number | string;
+  institution?: {
+    id?: number;
+    name?: string;
+    description?: string;
+    address?: string;
+    phone?: string;
+    logo?: string | null;
+    type?: string;
+    created_at?: string;
+    updated_at?: string;
+  };
+
+  bio?: string | null;
+  date_of_birth?: string | null;
+  profile_image?: string | File | null;
+
+  student_id?: string | null;
+
+  qr_code?: string;
+  qr_code_link?: string;
+
+  is_active?: boolean;
+
+  created_at?: string;
+  updated_at?: string;
+}
 const BASE_URL = Base_URL;// triggers the proxy
 
 interface Ires {
   code: number;
   message: string;
   status: boolean;
-  data: IStudents[];
+  data: IStudent[];
   links: {
     first: string;
     second: string;
@@ -42,17 +71,12 @@ interface Ires {
     total: number;
   };
 }
-// interface IOneCategoryres {
-//   code: number;
-//   message: string;
-//   status: boolean;
-//   data: IStudents;
-// }
+
 interface IresPost {
   code: number;
   message: string;
   status: boolean;
-  data: IStudents;
+  data: IStudent;
 }
 
 export const academicStudentApi = createApi({
@@ -112,7 +136,7 @@ export const academicStudentApi = createApi({
 
     updateAcademicStudents: builder.mutation<
       IresPost,
-      { id: number; body: IFormInputEduSys }
+      { id: number; body: FormData }
     >({
       query: ({ id, body }) => ({
         url: `/students/${id}`,
