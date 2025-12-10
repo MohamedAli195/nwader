@@ -24,7 +24,7 @@ const Products = () => {
         isOpen={isOpen}
         onClose={onClose}
       >
-        <h1 className="flex justify-center p-3  text-3xl">اضافة منتج</h1>
+        <h1 className="flex justify-center p-3  text-3xl">{t("addProd")}</h1>
         <AddProduct onClose={onClose}/>
       </Modal>
     </ComponentCard>

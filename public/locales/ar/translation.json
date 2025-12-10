@@ -102,12 +102,15 @@
 
   "Products": "المنتجات",
   "addButton": "إضافة منتج",
+  "addProd": "إضافة منتج جديد",
   "product Name": "اسم المنتج",
   "Description": "الوصف",
   "Price": "السعر",
   "Product Link": "رابط المنتج",
   "Image": "الصورة",
+  "status": "الحالة",
   "Actions": "الإجراءات",
-  "search": "ابحث  ..."
-  
+  "search": "ابحث  ...",
+  "Delete" : "حذف",
+  "Edit" : "تعديل"
 }
