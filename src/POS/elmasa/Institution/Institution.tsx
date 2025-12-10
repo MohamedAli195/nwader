@@ -3,6 +3,7 @@ import ComponentCard from "../../../components/common/ComponentCard";
 import { Modal } from "../../../components/ui/modal";
 import InstitutionsTable from "./table";
 import AddInstitution from "./addForm";
+import { t } from "i18next";
 
 const Institution = () => {
   const [isOpen, SetIsOpen] = useState(false);
@@ -15,7 +16,7 @@ const Institution = () => {
     SetIsOpen(true);
   };
   return (
-    <ComponentCard onOpen={onOpen} title="Institution">
+    <ComponentCard onOpen={onOpen} title={t("institutions") || "الجامعات و المدارس"}>
       <InstitutionsTable />
       <Modal
         className="w-full  lg:w-4/12 xl:w-4/12  h-auto relative  rounded-3xl bg-white  dark:bg-gray-900"

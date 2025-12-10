@@ -29,7 +29,7 @@ const ComponentCard: React.FC<ComponentCardProps> = ({
         </h3>
         {isAdd && (
           <Button onClick={onOpen} className="bg-green-600 font-bold">
-            {t("addButton") || "اضافة"}
+            {t("Add") || "اضافة"}
           </Button>
         )}
       </div>

@@ -4,15 +4,12 @@ import { useTranslation } from "react-i18next";
 import {
 
   ChevronDownIcon,
-
-  PageIcon,
-
   UserCircleIcon,
   HorizontaLDots,
 } from "../icons";
 import { useSidebar } from "../context/SidebarContext";
 import SidebarWidget from "../components/WedgetSidbar";
-import { UserSearchIcon } from "lucide-react";
+import { ChartArea, ChartBar, ChartBarStacked, GalleryHorizontalEnd, IndentDecrease, Newspaper, University, UserCheck, UserSearchIcon } from "lucide-react";
 
 
 
@@ -31,17 +28,17 @@ const isRTL = i18n.language === "ar";
 
   const mainItems: NavItem[] = [
 
-    { name: t("استعلام عن الطلاب"), path: "/StudentQrLookup", icon: <UserSearchIcon /> },
-    { name: t("الطلاب"), path: "/academic-students", icon: <UserCircleIcon /> },
-    { name: t("roles"), path: "/roles", icon: <PageIcon /> },
+    { name: t("Student inquiry"), path: "/StudentQrLookup", icon: <UserSearchIcon /> },
+    { name: t("Students"), path: "/academic-students", icon: <UserCircleIcon /> },
+    { name: t("roles"), path: "/roles", icon: <UserCheck /> },
 
-    { name: t("المنتجات"), path: "/products", icon: <PageIcon /> },
-    { name: t("الجامعات والمدارس"), path: "/institution", icon: <PageIcon /> },
-    { name: t("الاخبار"), path: "/news", icon: <PageIcon /> },
-    { name: t("عددالطلاب فى الجامعات والمدارس"), path: "/StudentsPerInstitutionReport", icon: <PageIcon /> },
-    { name: t("عدد الطلاب لكل نوع"), path: "/StudentsByInstitutionTypeReport", icon: <PageIcon /> },
-    { name: t("تفاصيل عن الاسكان"), path: "/QRScanStatistics", icon: <PageIcon /> },
-    { name: t("عن الجامعات والمدارس تفصيلى"), path: "/InstitutionDetailsCard", icon: <PageIcon /> },
+    { name: t("Products"), path: "/products", icon: <GalleryHorizontalEnd /> },
+    { name: t("institutions"), path: "/institution", icon: <University /> },
+    { name: t("News"), path: "/news", icon: <Newspaper /> },
+    { name: t("Numberofstudents"), path: "/StudentsPerInstitutionReport", icon: <ChartArea /> },
+    { name: t("Numberoftype"), path: "/StudentsByInstitutionTypeReport", icon: <ChartBar /> },
+    { name: t("QRScanDetails"), path: "/QRScanStatistics", icon: <ChartBarStacked /> },
+    { name: t("aboutuniversitiesandschools"), path: "/InstitutionDetailsCard", icon: <IndentDecrease /> },
     // { name: t("الشكاوى"), path: "/complaints", icon: <PlugInIcon /> },
     // { name: t("الاستفسارات"), path: "/inquiries", icon: <PlugInIcon /> },
 
@@ -230,7 +227,7 @@ const isRTL = i18n.language === "ar";
                 }`}
               >
                 {isExpanded || isHovered || isMobileOpen ? (
-                  "القائمة الرئيسية"
+                  ""
                 ) : (
                   <HorizontaLDots className="size-6" />
                 )}
