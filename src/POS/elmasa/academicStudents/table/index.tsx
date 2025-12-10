@@ -11,6 +11,7 @@ import {
 import Button from "../../../../components/ui/button/Button";
 import Paginator from "../../../../components/ui/Pagination/Paginator";
 import { Modal } from "../../../../components/ui/modal";
+import { useTranslation } from "react-i18next";
 
 import {
   IStudent,
@@ -18,13 +19,18 @@ import {
   useGetAcademicStudentsQuery,
 } from "../../../../app/features/academicStudent/academicStudentApi";
 import UpdateacademicStudentsForm from "../updateForm";
+
+import i18n from "../../../../components/i18n/i18n";
 // import { IStudents } from "../../../../app/features/academicStudentApi/academicStudentApi";
 
 
 export default function AcadimicStudentsTable() {
   const [page, SetPage] = useState(1);
   const [search, SetSearch] = useState("");
+  const { t } = useTranslation();
 
+const editButtonText = i18n.language === "en" ? "تعديل" : t("edit");
+const deleteButtonText = i18n.language === "en" ? "حذف" : t("delete");
   const { data, error, isLoading } = useGetAcademicStudentsQuery({
     page,
     search,
@@ -71,8 +77,9 @@ export default function AcadimicStudentsTable() {
     SetSearch(e.target.value);
   };
 
-  if (isLoading) return <p>جاري تحميل البيانات...</p>;
-  if (error) return <p className="text-red-500">حدث خطأ أثناء جلب البيانات!</p>;
+
+  if (isLoading) return <p>{t("loading_data")}</p>;
+  if (error) return <p className="text-red-500">{t("error_fetching")}</p>;
 
   return (
     <>
@@ -84,7 +91,7 @@ export default function AcadimicStudentsTable() {
             onChange={handleSearch}
             ref={inputRef}
             type="text"
-            placeholder="ابحث هنا..."
+            placeholder={t("search_here")}
             className="h-11 w-full rounded-lg border border-gray-300 bg-white px-4 text-sm text-gray-800 shadow-sm placeholder:text-gray-400 
               focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 
               dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400"
@@ -94,30 +101,28 @@ export default function AcadimicStudentsTable() {
         {/* جدول - يظهر في الشاشات المتوسطة فأعلى */}
         <div className="max-w-full overflow-x-auto hidden md:block">
           <Table>
-            <TableHeader>
-              <TableRow className="bg-gray-50 dark:bg-gray-800">
-                <TableCell isHeader className="px-5 py-3 font-semibold text-purple-700 text-start">
-                  الاسم 
-                </TableCell>
-                <TableCell isHeader className="px-5 py-3 font-semibold text-purple-700 text-start">
-                  رقم الهاتف
-                </TableCell>
-                <TableCell isHeader className="px-5 py-3 font-semibold text-purple-700 text-start">
-                  البريد الإلكتروني
-                </TableCell>
-
-                <TableCell isHeader className="px-5 py-3 font-semibold text-purple-700 text-start">
-                qr_code
-                </TableCell>
-                    <TableCell isHeader className="px-5 py-3 font-semibold text-purple-700 text-start">
-                اسم الجامعة
-                </TableCell>
-
-                <TableCell isHeader className="px-5 py-3 font-semibold text-purple-700 text-center text-sm dark:text-gray-300">
-                  الإجراءات
-                </TableCell>
-              </TableRow>
-            </TableHeader>
+           <TableHeader>
+      <TableRow className="bg-gray-50 dark:bg-gray-800">
+        <TableCell isHeader className="px-5 py-3 font-semibold text-purple-700 text-start">
+          {t("name")}
+        </TableCell>
+        <TableCell isHeader className="px-5 py-3 font-semibold text-purple-700 text-start">
+          {t("phone")}
+        </TableCell>
+        <TableCell isHeader className="px-5 py-3 font-semibold text-purple-700 text-start">
+          {t("email")}
+        </TableCell>
+        <TableCell isHeader className="px-5 py-3 font-semibold text-purple-700 text-start">
+          {t("qr_code")}
+        </TableCell>
+        <TableCell isHeader className="px-5 py-3 font-semibold text-purple-700 text-start">
+          {t("university_name")}
+        </TableCell>
+        <TableCell isHeader className="px-5 py-3 font-semibold text-purple-700 text-center text-sm dark:text-gray-300">
+          {t("actions")}
+        </TableCell>
+      </TableRow>
+    </TableHeader>
 
             <TableBody className="divide-y divide-gray-100 dark:divide-gray-700">
               {Students.map((student) => (
@@ -195,13 +200,15 @@ export default function AcadimicStudentsTable() {
                     SetTempCat(student);
                   }}
                 >
-                  تعديل
+                  
+          
+  {editButtonText}
                 </Button>
                 <Button
                   className="bg-red-500 hover:bg-red-600 text-white w-full sm:w-auto px-3 py-1 rounded-lg"
                   onClick={() => handleDelete(student?.id)}
                 >
-                  حذف
+  {deleteButtonText}
                 </Button>
               </div>
             </div>

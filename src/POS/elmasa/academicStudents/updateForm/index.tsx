@@ -1,6 +1,7 @@
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
+import { useTranslation } from "react-i18next";
 import Button from "../../../../components/ui/button/Button";
 import { IStudent, useUpdateAcademicStudentsMutation } from "../../../../app/features/academicStudent/academicStudentApi";
 import { useGetInstitutionsQuery } from "../../../../app/features/institution/institutionApi";
@@ -10,41 +11,31 @@ interface IProps {
   tempCat: IStudent | undefined;
   onCloseUp: () => void;
 }
+
 export interface IStudentsInputs {
-  id?:number
+  id?: number;
   first_name: string | undefined;
   email: string;
   institution_id: string;
   phone: string;
-  // is_active: boolean;
   password?: string;
-   password_confirmation?:string
-
+  password_confirmation?: string;
 }
 
-
 export default function UpdateAcademicStudentForm({ tempCat, onCloseUp }: IProps) {
+  const { t } = useTranslation();
   const { data: Institut, isLoading: isLoadingInstitutions } = useGetInstitutionsQuery();
   const [selectedInstitutionId, setSelectedInstitutionId] = useState<number | null>(null);
-
   const [updateAcademicStudents, { isLoading }] = useUpdateAcademicStudentsMutation();
 
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    formState: { errors },
-  } = useForm<IStudentsInputs>();
+  const { register, handleSubmit, setValue, formState: { errors } } = useForm<IStudentsInputs>();
 
-  // تعبئة البيانات في الفورم عند فتح صفحة التحديث
   useEffect(() => {
     if (tempCat) {
       setValue("first_name", tempCat.first_name);
       setValue("email", tempCat.email);
       setValue("phone", tempCat.phone);
       setValue("institution_id", tempCat.institution_id.toString());
-      // setValue("is_active", tempCat.is_active ? true : false);
-
       setSelectedInstitutionId(Number(tempCat.institution_id));
     }
   }, [tempCat, setValue]);
@@ -52,32 +43,19 @@ export default function UpdateAcademicStudentForm({ tempCat, onCloseUp }: IProps
   const onSubmit: SubmitHandler<IStudentsInputs> = async (formDataObj) => {
     try {
       const formData = new FormData();
-
-      const payload = {
-        ...formDataObj,
-
-      };
-
-      Object.entries(payload).forEach(([key, value]) => {
-        if (value !== undefined && value !== null) {
-          formData.append(key, value.toString());
-        }
+      Object.entries(formDataObj).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) formData.append(key, value.toString());
       });
 
-      await updateAcademicStudents({
-        id: Number(tempCat?.id),
-        body: formData,
-      }).unwrap();
-
-      Swal.fire("تم", "تم تعديل الطالب بنجاح", "success");
+      await updateAcademicStudents({ id: Number(tempCat?.id), body: formData }).unwrap();
+      Swal.fire(t("updated_success"), "", "success");
       onCloseUp();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      Swal.fire("خطأ", err?.data?.message || "حدث خطأ ما", "error");
+      Swal.fire(t("error_occurred"), err?.data?.message || "", "error");
     }
   };
 
-  // تحميل قائمة المؤسسات
   if (isLoadingInstitutions) {
     return (
       <div className="flex justify-center items-center h-40">
@@ -86,51 +64,61 @@ export default function UpdateAcademicStudentForm({ tempCat, onCloseUp }: IProps
     );
   }
 
-  return (
-    <form className="flex flex-col gap-3 p-5" onSubmit={handleSubmit(onSubmit)}>
+  // عنصر input محسّن
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  function InputField({ label, error, ...props }: any) {
+    return (
+      <div className="flex flex-col gap-1">
+        <label className="font-semibold text-gray-700 dark:text-gray-300">{label}</label>
+        <input
+          {...props}
+          className="border p-2 rounded-lg w-full focus:ring-2 focus:ring-purple-500 focus:border-purple-500 dark:bg-gray-700 dark:text-white dark:border-gray-600"
+        />
+        {error && <p className="text-red-500 text-sm">{error}</p>}
+      </div>
+    );
+  }
 
+  return (
+    <form className="flex flex-col gap-4 p-5" onSubmit={handleSubmit(onSubmit)}>
       <InputField
-        label="الاسم الأول"
-        {...register("first_name", { required: "حقل الاسم الأول مطلوب" })}
+        label={t("first_name")}
+        {...register("first_name", { required: t("required_field") })}
         error={errors.first_name?.message}
       />
-
       <InputField
-        label="البريد الإلكتروني"
+        label={t("email")}
         type="email"
-        {...register("email", { required: "حقل البريد مطلوب" })}
+        {...register("email", { required: t("required_field") })}
         error={errors.email?.message}
       />
-
       <InputField
-        label="رقم الهاتف"
-        {...register("phone", { required: "حقل الهاتف مطلوب" })}
+        label={t("phone")}
+        {...register("phone", { required: t("required_field") })}
         error={errors.phone?.message}
       />
-
       <InputField
-        label="كلمة المرور (اختياري)"
+        label={t("password_optional")}
         type="password"
         {...register("password")}
         error={errors.password?.message}
       />
-       <InputField
-        label="تأكيد كلمة المرور"
+      <InputField
+        label={t("password_confirmation")}
         type="password"
-        {...register("password_confirmation", { required: "حقل كلمة المرور مطلوب" })}
-        error={errors.password?.message}
+        {...register("password_confirmation")}
+        error={errors.password_confirmation?.message}
       />
 
-      {/* اختيار المؤسسة */}
-      <div>
-        <label className="block text-gray-700 dark:text-gray-300 mb-2">اختر المؤسسة:</label>
+      <div className="flex flex-col gap-1">
+        <label className="font-semibold text-gray-700 dark:text-gray-300">{t("select_institution")}:</label>
         <select
-          {...register("institution_id", { required: "حقل المؤسسة مطلوب" })}
-          className="w-full p-2 border rounded-lg dark:bg-gray-700 dark:text-white"
+          {...register("institution_id", { required: t("required_field") })}
+          className="w-full p-2 border rounded-lg dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
           value={selectedInstitutionId || ""}
           onChange={(e) => setSelectedInstitutionId(Number(e.target.value))}
         >
-          <option value="">-- اختر مؤسسة --</option>
+          <option value="">{t("choose_option")}</option>
           {Institut?.data.map((inst) => (
             <option key={inst.id} value={inst.id}>
               {inst.name} ({inst.type})
@@ -139,22 +127,12 @@ export default function UpdateAcademicStudentForm({ tempCat, onCloseUp }: IProps
         </select>
       </div>
 
-
-      <Button className="w-full mt-3" disabled={isLoading}>
-        {isLoading ? "انتظر..." : "تحديث الطالب"}
+      <Button
+        className="w-full mt-3 bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 rounded-lg"
+        disabled={isLoading}
+      >
+        {isLoading ? t("loading") : t("update")}
       </Button>
     </form>
-  );
-}
-
-// عنصر input
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function InputField({ label, error, ...props }: any) {
-  return (
-    <div className="flex flex-col">
-      <label>{label}</label>
-      <input {...props} className="border p-2 rounded w-full" />
-      {error && <p className="text-red-500 text-sm">{error}</p>}
-    </div>
   );
 }

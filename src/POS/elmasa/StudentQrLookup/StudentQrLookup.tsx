@@ -1,9 +1,11 @@
 import { useState } from "react";
-
 import { User, Phone, Mail, School } from "lucide-react";
 import { useGetStudentByQrQuery } from "../../../app/features/qrApi/qrApi";
+import { useTranslation } from "react-i18next";
 
 const StudentQrLookup = () => {
+  const { t } = useTranslation();
+
   const [qrCode, setQrCode] = useState("");
   const [searchCode, setSearchCode] = useState("");
 
@@ -23,20 +25,20 @@ const StudentQrLookup = () => {
       
       {/* Title */}
       <h1 className="text-3xl md:text-4xl font-extrabold text-purple-700 mb-6 text-center">
-        استعلام بيانات الطالب
+        {t("student_lookup")}
       </h1>
 
       {/* Search Box */}
       <div className="w-full max-w-md bg-white shadow-xl rounded-2xl p-6 border border-purple-100">
         <label className="block text-lg font-semibold text-gray-700 mb-2 text-center">
-           QR أدخل كود الـ
+          {t("enter_qr")}
         </label>
 
         <input
           type="text"
           value={qrCode}
           onChange={(e) => setQrCode(e.target.value)}
-          placeholder="مثال: STU-ABCD1234"
+          placeholder={t("example_qr")}
           className="w-full border border-gray-300 px-4 py-3 rounded-xl text-lg focus:ring-2 focus:ring-purple-500 outline-none"
         />
 
@@ -44,21 +46,21 @@ const StudentQrLookup = () => {
           onClick={handleSearch}
           className="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 rounded-xl mt-4 transition text-lg"
         >
-          بحث
+          {t("search")}
         </button>
       </div>
 
       {/* Loading */}
       {isLoading && (
         <p className="mt-6 text-purple-700 text-xl font-semibold animate-pulse">
-          جاري جلب البيانات...
+          {t("loading")}
         </p>
       )}
 
       {/* Error */}
       {isError && (
         <p className="mt-6 text-red-600 text-xl font-semibold">
-          لا يوجد طالب بهذا الكود
+          {t("error")}
         </p>
       )}
 
@@ -67,7 +69,7 @@ const StudentQrLookup = () => {
         <div className="mt-10 w-full max-w-lg bg-white rounded-3xl shadow-2xl border border-purple-200 p-8 text-right">
           
           <h2 className="text-2xl font-bold text-purple-700 mb-6 text-center">
-            بيانات الطالب
+            {t("student_data")}
           </h2>
 
           <div className="space-y-5">
@@ -77,9 +79,7 @@ const StudentQrLookup = () => {
               <div className="bg-purple-100 text-purple-700 p-3 rounded-full">
                 <User size={22} />
               </div>
-              <p className="text-lg font-semibold">
-                {data.data.full_name}
-              </p>
+              <p className="text-lg font-semibold">{data.data.full_name}</p>
             </div>
 
             {/* Email */}
@@ -104,7 +104,7 @@ const StudentQrLookup = () => {
                 <School size={22} />
               </div>
               <p className="text-lg">
-                {data.data.institution?.name || "غير محدد"}
+                {data.data.institution?.name || t("not_specified")}
               </p>
             </div>
 

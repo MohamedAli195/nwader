@@ -127,5 +127,48 @@
   "email": "البريد الإلكتروني",
   "phone": "رقم الهاتف",
   "address": "العنوان",
-  "type": "النوع"
+  "type": "النوع",
+  "student_lookup": "استعلام بيانات الطالب",
+  "enter_qr": "أدخل كود الـ QR",
+  "example_qr": "مثال: STU-ABCD1234",
+ 
+  "loading": "جاري جلب البيانات...",
+  "error": "لا يوجد طالب بهذا الكود",
+  "student_data": "بيانات الطالب",
+  "full_name": "الاسم الكامل",
+
+  "institution": "المؤسسة",
+  "not_specified": "غير محدد",
+    "students": "الطلاب",
+    "Add":"إضافة",
+     "loading_data": "جاري تحميل البيانات...",
+  "error_fetching": "حدث خطأ أثناء جلب البيانات!",
+  "search_here": "ابحث هنا...",
+
+  "qr_code": "كود QR",
+  "university_name": "اسم الجامعة",
+  "actions": "الإجراءات",
+  "edit_student": "تعديل",
+  "delete_confirm_title": "هل أنت متأكد؟",
+  "delete_confirm_text": "لن تتمكن من التراجع عن هذا!",
+  "delete_confirm_button": "نعم، احذف",
+  "delete_cancel_button": "إلغاء",
+  "deleted_success": "تم حذف الطالب بنجاح.",
+  "error_occurred": "حدث خطأ ما!",
+   "first_name": "الاسم الأول",
+
+  "password": "كلمة المرور",
+  "password_confirmation": "تأكيد كلمة المرور",
+  "select_institution": "اختر المؤسسة",
+  "choose_option": "-- اختر مؤسسة --",
+  "submit": "إضافة طالب",
+  
+  "required_field": "هذا الحقل مطلوب",
+  "added_success": "تم إضافة الطالب بنجاح",
+    "password_optional": "كلمة المرور (اختياري)",
+    "edit":"تعديل",
+    "delete":"حذف"
+
+  
+
 }

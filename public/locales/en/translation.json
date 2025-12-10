@@ -127,5 +127,49 @@
   "email": "Email",
   "phone": "Phone",
   "address": "Address",
-  "type": "Type"
+  "type": "Type",
+    "student_lookup": "Student Lookup",
+  "enter_qr": "Enter QR Code",
+  "example_qr": "Example: STU-ABCD1234",
+
+  "loading": "Fetching data...",
+  "error": "No student found with this code",
+  "student_data": "Student Data",
+  "full_name": "Full Name",
+
+  "institution": "Institution",
+  "not_specified": "Not specified",
+    "students": "Students",
+    "Add":"Add",
+    "loading_data": "Loading data...",
+  "error_fetching": "An error occurred while fetching data!",
+  "search_here": "Search here...",
+
+  "qr_code": "QR Code",
+  "university_name": "University Name",
+  "actions": "Actions",
+  "edit_student": "Edit",
+  "delete_confirm_title": "Are you sure?",
+  "delete_confirm_text": "You won't be able to revert this!",
+  "delete_confirm_button": "Yes, delete",
+  "delete_cancel_button": "Cancel",
+  "deleted_success": "Student deleted successfully.",
+  "error_occurred": "An error occurred!",
+   "first_name": "First Name",
+
+  "password": "Password",
+  "password_confirmation": "Confirm Password",
+  "select_institution": "Select Institution",
+  "choose_option": "-- Select Institution --",
+  "submit": "Add Student",
+ 
+  "required_field": "This field is required",
+  "added_success": "Student added successfully",
+    "password_optional": "Password (Optional)",
+    "edit":"Edit",
+    "delete":"Delete"
+
+
+
+
 }
