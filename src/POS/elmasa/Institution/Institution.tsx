@@ -3,9 +3,11 @@ import ComponentCard from "../../../components/common/ComponentCard";
 import { Modal } from "../../../components/ui/modal";
 import InstitutionsTable from "./table";
 import AddInstitution from "./addForm";
-import { t } from "i18next";
+import { useTranslation } from "react-i18next";
+
 
 const Institution = () => {
+  const { t } = useTranslation();
   const [isOpen, SetIsOpen] = useState(false);
 
   const onClose = () => {
@@ -23,7 +25,7 @@ const Institution = () => {
         isOpen={isOpen}
         onClose={onClose}
       >
-        <h1 className="flex justify-center p-3  text-3xl">الجامعات و المدارس</h1>
+        <h1 className="flex justify-center p-3  text-3xl">{t("institutions") || "الجامعات و المدارس"}</h1>
         <AddInstitution onClose={onClose} />
       </Modal>
     </ComponentCard>

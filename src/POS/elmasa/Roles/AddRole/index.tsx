@@ -1,9 +1,6 @@
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
-
 import Swal from "sweetalert2";
 import { useTranslation } from "react-i18next";
-
-
 
 import Select from "react-select";
 import { useCreateRoleMutation } from "../../../../app/features/roles/roles";
@@ -20,7 +17,7 @@ export default function AddRole({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation();
   const [createRole, { isLoading }] = useCreateRoleMutation();
   const { data: permission } = useGetPermissionsQuery();
-  console.log(permission)
+
   const {
     register,
     handleSubmit,
@@ -43,11 +40,11 @@ export default function AddRole({ onClose }: { onClose: () => void }) {
 
     try {
       await createRole(formData).unwrap();
-      Swal.fire("تم", "تمت إضافة الرول بنجاح", "success");
+      Swal.fire(t("done"), t("role_added_successfully"), "success");
       onClose();
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
-      Swal.fire("خطأ", "حدث خطأ أثناء الإضافة", "error");
+      Swal.fire(t("error"), t("error_while_adding"), "error");
     }
   };
 
@@ -56,12 +53,13 @@ export default function AddRole({ onClose }: { onClose: () => void }) {
       className="flex justify-center flex-col my-12 gap-2 p-5 w-full"
       onSubmit={handleSubmit(onSubmit)}
     >
+      {/* اسم الدور */}
       <div>
-        <label>{"اسم الدور"}</label>
+        <label>{t("role_name")}</label>
         <Input
           type="text"
           {...register("name", {
-            required: "اسم الدور مطلوب",
+            required: t("role_name_required") || "اسم الدور مطلوب",
           })}
         />
         {errors.name && (
@@ -69,14 +67,15 @@ export default function AddRole({ onClose }: { onClose: () => void }) {
         )}
       </div>
 
+      {/* الصلاحيات */}
       <div className="mb-6">
-        <label>{t("selectPermissions") || "اختر الصلاحيات:"}</label>
+        <label>{t("select_permissions")}</label>
 
         <Controller
           name="permissions"
           control={control}
           rules={{
-            required: "اختر صلاحيات",
+            required: t("permissions_required") || "اختر صلاحيات",
           }}
           render={({ field }) => (
             <Select
@@ -87,15 +86,14 @@ export default function AddRole({ onClose }: { onClose: () => void }) {
             />
           )}
         />
+
         {errors.permissions && (
-          <p className="text-red-500 text-sm">
-            {errors.permissions.message}
-          </p>
+          <p className="text-red-500 text-sm">{errors.permissions.message}</p>
         )}
       </div>
 
       <Button disabled={isLoading} className="w-full">
-        {isLoading ? "جاري الإضافة..." : "إضافة رول"}
+        {isLoading ? t("loading_adding") : t("add_role")}
       </Button>
     </form>
   );

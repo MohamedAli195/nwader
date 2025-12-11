@@ -20,7 +20,7 @@ import {
 } from "../../../../app/features/academicStudent/academicStudentApi";
 import UpdateacademicStudentsForm from "../updateForm";
 
-import i18n from "../../../../components/i18n/i18n";
+
 // import { IStudents } from "../../../../app/features/academicStudentApi/academicStudentApi";
 
 
@@ -29,8 +29,6 @@ export default function AcadimicStudentsTable() {
   const [search, SetSearch] = useState("");
   const { t } = useTranslation();
 
-const editButtonText = i18n.language === "en" ? "تعديل" : t("edit");
-const deleteButtonText = i18n.language === "en" ? "حذف" : t("delete");
   const { data, error, isLoading } = useGetAcademicStudentsQuery({
     page,
     search,
@@ -156,13 +154,14 @@ const deleteButtonText = i18n.language === "en" ? "حذف" : t("delete");
                           SetTempCat(student);
                         }}
                       >
-                        تعديل
+                        {t("edit")}
                       </Button>
                       <Button
                         className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg"
                         onClick={() => handleDelete(student?.id)}
                       >
-                        حذف
+                                                {t("delete")}
+
                       </Button>
                     </div>
                   </TableCell>
@@ -193,7 +192,7 @@ const deleteButtonText = i18n.language === "en" ? "حذف" : t("delete");
               </p>
 
               <div className="flex flex-col sm:flex-row gap-2 mt-3">
-                <Button
+                {/* <Button
                   className="bg-blue-500 hover:bg-blue-600 text-white w-full sm:w-auto px-3 py-1 rounded-lg"
                   onClick={() => {
                     onOpenUp();
@@ -202,13 +201,13 @@ const deleteButtonText = i18n.language === "en" ? "حذف" : t("delete");
                 >
                   
           
-  {editButtonText}
-                </Button>
+ {t("edit") || "تعديل"}
+                </Button> */}
                 <Button
                   className="bg-red-500 hover:bg-red-600 text-white w-full sm:w-auto px-3 py-1 rounded-lg"
                   onClick={() => handleDelete(student?.id)}
                 >
-  {deleteButtonText}
+{t("delete") || "حذف"}
                 </Button>
               </div>
             </div>

@@ -17,13 +17,16 @@ import {
   useGetInstitutionsQuery,
 } from "../../../../app/features/institution/institutionApi";
 import UpdateInstitutionForm from "../updateForm";
-import { t } from "i18next";
+import { useTranslation } from "react-i18next";
+
 interface ApiError {
   data?: {
     errors?: Record<string, string[]>;
   };
 }
+
 export default function InstitutionsTable() {
+  const { t } = useTranslation();
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
 
@@ -42,19 +45,19 @@ export default function InstitutionsTable() {
 
   const handleDelete = async (id: number | undefined) => {
     if (!id) {
-      Swal.fire("خطأ", "المؤسسة غير صالحة", "error");
+      Swal.fire(t("errorTitle") || "خطأ", t("invalidInstitution") || "المؤسسة غير صالحة", "error");
       return;
     }
 
     const result = await Swal.fire({
-      title: "هل أنت متأكد؟",
-      text: "لن تتمكن من التراجع عن هذا!",
+      title: t("deleteConfirmTitle") || "هل أنت متأكد؟",
+      text: t("deleteConfirmText") || "لن تتمكن من التراجع عن هذا!",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#2563eb",
       cancelButtonColor: "#dc2626",
-      confirmButtonText: "نعم، احذف",
-      cancelButtonText: "إلغاء",
+      confirmButtonText: t("deleteConfirmYes") || "نعم، احذف",
+      cancelButtonText: t("deleteConfirmCancel") || "إلغاء",
       buttonsStyling: true,
       reverseButtons: true,
     });
@@ -62,14 +65,18 @@ export default function InstitutionsTable() {
     if (result.isConfirmed) {
       try {
         await deleteInstitution(id).unwrap();
-        Swal.fire("تم الحذف!", "تم حذف المؤسسة بنجاح.", "success");
-      } catch (err: unknown) {
-        const error = err as ApiError; // نحدد النوع هنا فقط بعد catch
         Swal.fire(
-          "خطأ",
+          t("deleted") || "تم الحذف!",
+          t("institutionDeleted") || "تم حذف المؤسسة بنجاح.",
+          "success"
+        );
+      } catch (err: unknown) {
+        const error = err as ApiError;
+        Swal.fire(
+          t("errorTitle") || "خطأ",
           error?.data?.errors
             ? Object.values(error.data.errors).flat().join("\n")
-            : "حدث خطأ غير متوقع",
+            : t("errorUnknown") || "حدث خطأ غير متوقع",
           "error"
         );
       }
@@ -77,11 +84,10 @@ export default function InstitutionsTable() {
   };
 
   const inputRef = useRef<HTMLInputElement>(null);
-  const handleSearch = (e: ChangeEvent<HTMLInputElement>) =>
-    setSearch(e.target.value);
+  const handleSearch = (e: ChangeEvent<HTMLInputElement>) => setSearch(e.target.value);
 
-  if (isLoading) return <p>جاري تحميل البيانات...</p>;
-  if (error) return <p className="text-red-500">حدث خطأ أثناء جلب البيانات!</p>;
+  if (isLoading) return <p>{t("loading") || "جاري تحميل البيانات..."}</p>;
+  if (error) return <p className="text-red-500">{t("fetchError") || "حدث خطأ أثناء جلب البيانات!"}</p>;
 
   return (
     <>
@@ -93,7 +99,7 @@ export default function InstitutionsTable() {
             onChange={handleSearch}
             ref={inputRef}
             type="text"
-            placeholder="ابحث هنا..."
+            placeholder={t("searchPlaceholder") || "ابحث هنا..."}
             className="h-11 w-full rounded-lg border border-gray-300 bg-white px-4 text-sm text-gray-800 shadow-sm placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400"
           />
         </div>
@@ -103,66 +109,35 @@ export default function InstitutionsTable() {
           <Table className="min-w-[700px] sm:min-w-full">
             <TableHeader>
               <TableRow className="bg-gray-50 dark:bg-gray-800">
-                <TableCell
-                  isHeader
-                  className="px-5 py-3 font-semibold text-purple-700 text-start"
-                >
+                <TableCell isHeader className="px-5 py-3 font-semibold text-purple-700 text-start">
                   {t("name") || "الاسم"}
                 </TableCell>
-                <TableCell
-                  isHeader
-                  className="px-5 py-3 font-semibold text-purple-700 text-start"
-                >
+                <TableCell isHeader className="px-5 py-3 font-semibold text-purple-700 text-start">
                   {t("type") || "النوع"}
                 </TableCell>
-                <TableCell
-                  isHeader
-                  className="px-5 py-3 font-semibold text-purple-700 text-start hidden"
-                >
-                  البريد الإلكتروني
+                <TableCell isHeader className="px-5 py-3 font-semibold text-purple-700 text-start hidden">
+                  {t("email") || "البريد الإلكتروني"}
                 </TableCell>
-                <TableCell
-                  isHeader
-                  className="px-5 py-3 font-semibold text-purple-700 text-start hidden"
-                >
-                  الهاتف
+                <TableCell isHeader className="px-5 py-3 font-semibold text-purple-700 text-start hidden">
+                  {t("phone") || "الهاتف"}
                 </TableCell>
-                <TableCell
-                  isHeader
-                  className="px-5 py-3 font-semibold text-purple-700 text-start"
-                >
-                 {t("status") || "الحالة"}
+                <TableCell isHeader className="px-5 py-3 font-semibold text-purple-700 text-start">
+                  {t("status") || "الحالة"}
                 </TableCell>
-                <TableCell
-                  isHeader
-                  className="px-5 py-3 font-semibold text-purple-700 text-center"
-                >
-                  {t("Actions") || "الإجراءات"}
+                <TableCell isHeader className="px-5 py-3 font-semibold text-purple-700 text-center">
+                  {t("actions") || "الإجراءات"}
                 </TableCell>
               </TableRow>
             </TableHeader>
 
             <TableBody className="divide-y divide-gray-100 dark:divide-gray-700">
               {institutions.map((inst) => (
-                <TableRow
-                  key={inst.id}
-                  className="hover:bg-gray-50 dark:hover:bg-gray-800 transition"
-                >
-                  <TableCell className="px-5 py-4 text-gray-900 dark:text-gray-100 font-medium">
-                    {inst.name}
-                  </TableCell>
-                  <TableCell className="px-5 py-4 text-gray-600 dark:text-gray-400">
-                    {inst.type}
-                  </TableCell>
-                  <TableCell className="px-5 py-4 text-gray-600 dark:text-gray-400 hidden">
-                    {inst.email}
-                  </TableCell>
-                  <TableCell className="px-5 py-4 text-gray-600 dark:text-gray-400 hidden">
-                    {inst.phone}
-                  </TableCell>
-                  <TableCell className="px-5 py-4 text-gray-600 dark:text-gray-400 ">
-                    {inst.is_active ? "مفعل" : "غير مفعل"}
-                  </TableCell>
+                <TableRow key={inst.id} className="hover:bg-gray-50 dark:hover:bg-gray-800 transition">
+                  <TableCell className="px-5 py-4 text-gray-900 dark:text-gray-100 font-medium">{inst.name}</TableCell>
+                  <TableCell className="px-5 py-4 text-gray-600 dark:text-gray-400">{inst.type}</TableCell>
+                  <TableCell className="px-5 py-4 text-gray-600 dark:text-gray-400 hidden">{inst.email}</TableCell>
+                  <TableCell className="px-5 py-4 text-gray-600 dark:text-gray-400 hidden">{inst.phone}</TableCell>
+                  <TableCell className="px-5 py-4 text-gray-600 dark:text-gray-400">{inst.is_active ? t("active") || "مفعل" : t("inactive") || "غير مفعل"}</TableCell>
                   <TableCell className="px-5 py-4 text-center">
                     <div className="flex flex-col sm:flex-row justify-center gap-2">
                       <Button
@@ -172,13 +147,13 @@ export default function InstitutionsTable() {
                           setTempInstitution(inst);
                         }}
                       >
-                        {t("Edit") || "تعديل"}
+                        {t("edit") || "تعديل"}
                       </Button>
                       <Button
                         className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg"
                         onClick={() => handleDelete(inst.id)}
                       >
-                        {t("Delete") || "حذف"}
+                        {t("delete") || "حذف"}
                       </Button>
                     </div>
                   </TableCell>
@@ -195,20 +170,11 @@ export default function InstitutionsTable() {
       </div>
 
       {/* ✏️ مودال التعديل */}
-      <Modal
-        className="w-full lg:w-4/12 xl:w-4/12 h-auto relative rounded-2xl bg-white dark:bg-gray-900"
-        isOpen={isOpenUp}
-        onClose={onCloseUp}
-      >
+      <Modal className="w-full lg:w-4/12 xl:w-4/12 h-auto relative rounded-2xl bg-white dark:bg-gray-900" isOpen={isOpenUp} onClose={onCloseUp}>
         <h1 className="flex justify-center p-3 text-2xl font-semibold text-gray-700 dark:text-gray-200">
-          تعديل المؤسسة
+          {t("updateInstitutionTitle") || "تعديل المؤسسة"}
         </h1>
-        {tempInstitution && (
-          <UpdateInstitutionForm
-            onCloseUp={onCloseUp}
-            tempInstitution={tempInstitution}
-          />
-        )}
+        {tempInstitution && <UpdateInstitutionForm onCloseUp={onCloseUp} tempInstitution={tempInstitution} />}
       </Modal>
     </>
   );

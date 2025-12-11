@@ -34,9 +34,9 @@ const [isOpenUp, SetIsOpenUp] = useState(false);
     SetIsOpenView(false);
   };
 
-  const onOpenView = () => {
-    SetIsOpenView(true);
-  };
+  // const onOpenView = () => {
+  //   SetIsOpenView(true);
+  // };
 
   const admins = data?.data ?? [];
   const total = data?.meta?.total ?? 0;
@@ -110,40 +110,46 @@ console.log(admins)
         />
         <div className="max-w-full overflow-x-auto">
           <Table>
-            <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
-              <TableRow>
-                <TableCell
-                  isHeader
-                  className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400">
-                  {t("name") || "الاسم"}
-                </TableCell>
-                <TableCell
-                  isHeader
-                  className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400">
-                  {t("name") || "اسم الحساب"}
-                </TableCell>
-                <TableCell
-                  isHeader
-                  className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400">
-                  {t("email") || "البريد الالكترونى"}
-                </TableCell>
+<TableHeader>
+  <TableRow className="bg-gray-50 dark:bg-gray-800">
+    <TableCell
+      isHeader
+      className="px-5 py-3 font-semibold text-purple-700 text-start"
+    >
+      {t("name") || "الاسم"}
+    </TableCell>
+
+    <TableCell
+      isHeader
+      className="px-5 py-3 font-semibold text-purple-700 text-start"
+    >
+      {t("accountName") || "اسم الحساب"}
+    </TableCell>
+
+    <TableCell
+      isHeader
+      className="px-5 py-3 font-semibold text-purple-700 text-start"
+    >
+      {t("email") || "البريد الالكتروني"}
+    </TableCell>
+
+    <TableCell
+      isHeader
+      className="px-5 py-3 font-semibold text-purple-700 text-start"
+    >
+      {t("roles") || "الرولز"}
+    </TableCell>
+
+    <TableCell
+      isHeader
+      className="px-5 py-3 font-semibold text-purple-700 text-center"
+    >
+      {t("actions") || "العمليات"}
+    </TableCell>
+  </TableRow>
+</TableHeader>
 
 
-          
-                
-                <TableCell
-                  isHeader
-                  className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400">
-                  { "الرولز"}
-                </TableCell>
-
-                <TableCell
-                  isHeader
-                  className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400">
-                  {t("العمليات") || "العمليات"}
-                </TableCell>
-              </TableRow>
-            </TableHeader>
 
             <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
               {admins.map((admin: IAdmins) => (
@@ -190,13 +196,13 @@ console.log(admins)
                         }}>
                         {t("edit") || "تعديل"}
                       </Button>
-                      <Button
+                      {/* <Button
                         onClick={() => {
                           onOpenView();
                           SetTempAdmin(admin);
                         }}>
-                        { "عرض"}
-                      </Button>
+  {t("view") || "عرض"}
+                      </Button> */}
                       <Button
                         className="bg-red-500"
                         onClick={() => handleDelete(admin?.id)}>
